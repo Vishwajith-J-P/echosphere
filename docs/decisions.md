@@ -11,6 +11,7 @@
 | D-005 | SQLite prototype behind repository interfaces | ACCEPTED | 2026-09-03 |
 | D-006 | Finalized transcripts only; recording off by default | ACCEPTED | 2026-09-03 |
 | D-007 | Flask plus React/Jinja delivery model | ACCEPTED | 2026-09-03 |
+| D-008 | Canonical documentation lives under docs | ACCEPTED | 2026-09-03 |
 
 ## D-001 — Agora Voice Path
 
@@ -72,6 +73,16 @@
 
 **Tradeoffs:** Shared visual contracts are needed across rendering modes.
 
+## D-008 — Canonical Documentation Directory
+
+**Decision:** Store all product, technical, execution, and architectural decision documentation under `docs/`. Keep only the repository overview and agent instructions at the root.
+
+**Reasoning:** A single canonical hierarchy makes the complete specification discoverable and prevents scattered or duplicated documentation.
+
+**Alternatives:** Keeping the three documentation directories at the root was functional but did not provide one documentation home. Copying files was rejected because duplicate sources would drift.
+
+**Tradeoffs:** Existing links and agent instructions must use the new paths.
+
 ## Proposed Decisions
 
 The following must be resolved with official vendor capability validation or deployment stakeholders before the affected production work:
@@ -84,4 +95,4 @@ The following must be resolved with official vendor capability validation or dep
 
 ## Superseded Context
 
-The repository previously contained only generic decision templates. D-001 through D-007 establish the first product-specific architecture and supersede the unstated generic-template assumptions where they conflict.
+The repository previously contained only generic decision templates. D-001 through D-008 establish the product-specific architecture and documentation structure and supersede unstated generic-template assumptions where they conflict.

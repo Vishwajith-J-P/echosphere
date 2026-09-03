@@ -178,7 +178,7 @@ An explicit request for a person bypasses nonessential questions and starts hand
 
 Safety boundaries and explicit human requests take precedence over information collection, confirmation, completion, and ticket synchronization. Human transfer takes precedence over ticket availability. Confirmed caller facts take precedence over AI inference; a correction invalidates the prior current value until the replacement is reconfirmed.
 
-Detailed safety behavior is defined in `product/safety_policy.md`. Requirement-to-feature/test coverage is maintained in `execution/traceability.md`.
+Detailed safety behavior is defined in `docs/product/safety_policy.md`. Requirement-to-feature/test coverage is maintained in `docs/execution/traceability.md`.
 
 ## Requirement Change Log
 

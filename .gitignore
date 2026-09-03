@@ -1,0 +1,36 @@
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+.agora/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Node and frontend build output
+node_modules/
+dist/
+coverage/
+.coverage
+
+# Local runtime data
+instance/
+*.sqlite3
+*.db
+*.log
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

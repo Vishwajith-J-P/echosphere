@@ -45,7 +45,7 @@ All entities are **PLANNED**. They describe the approved persistence contract; n
 
 Index `status, created_at`; unique partial index on `provider_session_id`.
 
-`status` values are `created|connecting|disclosure|collecting|confirming|completing|escalating|transferring|human_connected|ended|failed`. Normal transitions follow the state machine in `technical/architecture.md`; terminal states are `ended` and `failed`.
+`status` values are `created|connecting|disclosure|collecting|confirming|completing|escalating|transferring|human_connected|ended|failed`. Normal transitions follow the state machine in `docs/technical/architecture.md`; terminal states are `ended` and `failed`.
 
 ## E-002 — Case
 

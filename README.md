@@ -4,28 +4,30 @@ EchoSphere is a planned real-time Hindi-English voice AI prototype for customer 
 
 ## Current Status
 
-Documentation baseline complete; application implementation has not started. Every capability in `execution/features.md` remains `PLANNED`.
+Documentation baseline complete; application implementation has not started. Every capability in `docs/execution/features.md` remains `PLANNED`.
 
 ## Documentation Map
 
 | Document | Authority |
 |---|---|
-| `product/project_requirement_document.md` | Approved scope, requirements, acceptance criteria |
-| `product/app_flow.md` | Caller, agent, safety, and failure journeys |
-| `product/ui_ux_brief.md` | Voice and console experience rules |
-| `product/safety_policy.md` | Prohibited behavior, escalation precedence, response rules |
-| `technical/technical_requirement_document.md` | Technical constraints and invariants |
-| `technical/architecture.md` | Components, trust boundaries, runtime ownership |
-| `technical/agora_integration.md` | Agora responsibilities and lifecycle |
-| `technical/api_contract.md` | Planned internal HTTP/event contracts |
-| `technical/backend_schema.md` | Planned persistent entities and constraints |
-| `technical/operations.md` | Configuration, deployment, monitoring, incident behavior |
-| `execution/features.md` | Actual feature implementation status |
-| `execution/implementation_plan.md` | Ordered implementation work |
-| `execution/test_plan.md` | Verification strategy and test scenarios |
-| `execution/traceability.md` | Requirements-to-feature/test mapping |
-| `execution/tech_debt.md` | Intentional implemented compromises |
-| `decisions.md` | Accepted and proposed architectural decisions |
+| `docs/README.md` | Documentation index, ownership, and reading paths |
+| `docs/project_blueprint.md` | Consolidated project, stack, modules, and delivery summary |
+| `docs/product/project_requirement_document.md` | Approved scope, requirements, acceptance criteria |
+| `docs/product/app_flow.md` | Caller, agent, safety, and failure journeys |
+| `docs/product/ui_ux_brief.md` | Voice and console experience rules |
+| `docs/product/safety_policy.md` | Prohibited behavior, escalation precedence, response rules |
+| `docs/technical/technical_requirement_document.md` | Technical constraints and invariants |
+| `docs/technical/architecture.md` | Components, trust boundaries, runtime ownership |
+| `docs/technical/agora_integration.md` | Agora responsibilities and lifecycle |
+| `docs/technical/api_contract.md` | Planned internal HTTP/event contracts |
+| `docs/technical/backend_schema.md` | Planned persistent entities and constraints |
+| `docs/technical/operations.md` | Configuration, deployment, monitoring, incident behavior |
+| `docs/execution/features.md` | Actual feature implementation status |
+| `docs/execution/implementation_plan.md` | Ordered implementation work |
+| `docs/execution/test_plan.md` | Verification strategy and test scenarios |
+| `docs/execution/traceability.md` | Requirements-to-feature/test mapping |
+| `docs/execution/tech_debt.md` | Intentional implemented compromises |
+| `docs/decisions.md` | Accepted and proposed architectural decisions |
 
 ## Source-of-Truth Rules
 

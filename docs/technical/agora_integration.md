@@ -2,7 +2,7 @@
 
 ## Status
 
-Planned and partially vendor-validated from official documentation current on 2026-09-03. Exact SDK versions and Hindi-English provider choices remain Phase 0 deliverables.
+Planned and partially vendor-validated from official documentation current on 2026-09-03. Agora CLI 0.2.8 is installed/authenticated; the workspace is bound to the global `echosphere` project; RTC, Signaling, and Conversational AI are enabled. The CLI still reports token capability disabled as a non-blocking warning. Exact application SDK versions and Hindi-English provider choices remain Phase 0 deliverables.
 
 ## Role in EchoSphere
 

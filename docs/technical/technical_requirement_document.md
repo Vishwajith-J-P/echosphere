@@ -2,7 +2,7 @@
 
 ## Status and Source of Truth
 
-This document defines constraints for the planned EchoSphere prototype. No runtime implementation exists yet. Product behavior is defined in `product/project_requirement_document.md`; planned data is in `technical/backend_schema.md`; current implementation state is in `execution/features.md`.
+This document defines constraints for the planned EchoSphere prototype. No runtime implementation exists yet. Product behavior is defined in `docs/product/project_requirement_document.md`; planned data is in `docs/technical/backend_schema.md`; current implementation state is in `docs/execution/features.md`.
 
 ## Technical Overview
 
@@ -17,6 +17,23 @@ This document defines constraints for the planned EchoSphere prototype. No runti
 | Authentication | Caller session capability tokens plus demo agent/supervisor accounts; production identity-provider selection is unresolved |
 
 Exact SDK/package versions must be pinned during implementation against then-current official Agora and framework documentation.
+
+### Technology Selection Status
+
+| Technology | Status | Constraint |
+|---|---|---|
+| Python + Flask | ACCEPTED | Backend/API framework |
+| React + TypeScript | ACCEPTED | Realtime caller and console UI |
+| Vite | PROPOSED | Frontend build tooling; confirm during scaffold |
+| Jinja | ACCEPTED/OPTIONAL | Lightweight server shell only |
+| Agora RTC + Conversational AI + Signaling | ACCEPTED | Mandatory voice/event platform |
+| SQLite | ACCEPTED FOR PROTOTYPE | Must remain behind repositories |
+| SQLAlchemy + Alembic | PROPOSED | ORM/migrations; confirm compatible pinned versions |
+| SSE | PROPOSED | Console event stream; WebSocket is the alternative |
+| Pytest | PROPOSED | Python test runner |
+| External ticket/handoff provider | UNRESOLVED | Mock/local adapter required first |
+
+No proposed technology is considered installed or implemented until `docs/execution/features.md` and dependency manifests show it.
 
 ## Architecture Invariants
 
@@ -166,4 +183,4 @@ Environment-specific values include Agora credentials/project identifiers, token
 - Production database and job runner.
 - Validated STT/TTS/model combination for Hindi-English code-switching.
 
-See `technical/agora_integration.md`, `technical/api_contract.md`, and `technical/operations.md` for concrete integration, interface, and operating contracts.
+See `docs/technical/agora_integration.md`, `docs/technical/api_contract.md`, and `docs/technical/operations.md` for concrete integration, interface, and operating contracts.

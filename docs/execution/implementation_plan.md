@@ -4,6 +4,14 @@
 
 Documentation and scope definition are complete. Application implementation has not started.
 
+## Completed Preparation
+
+| Task | Status | Outcome |
+|---|---|---|
+| IP-000 | COMPLETE | Consolidated the product, technical, execution, safety, operations, and decision specification under `docs/`; protected local environment secrets |
+
+**Evidence:** Documentation path/placeholder/fence validation and Git-ignore verification performed on 2026-09-03. This completes documentation only, not any product feature.
+
 ## Phase 0 — Vendor Spike and Test Harness
 
 **Objective:** Prove the risky Agora path before building product surfaces.
@@ -87,7 +95,7 @@ Documentation and scope definition are complete. Application implementation has 
 ## Completion Discipline
 
 - Change a task to IN_PROGRESS before coding and COMPLETE only after its tests/evidence pass.
-- Update `execution/features.md` capability boxes and implementation files after each completed task.
+- Update `docs/execution/features.md` capability boxes and implementation files after each completed task.
 - Update schema only with implemented migrations.
 - Record new architectural decisions and intentional compromises.
 - Do not expand into production emergency response, expert advice, identity proofing, payments, or autonomous resolution.
@@ -96,3 +104,13 @@ Documentation and scope definition are complete. Application implementation has 
 
 **Active task:** None  
 **Next recommended task:** IP-001 — Agora vendor spike.
+
+## Plan Change Log
+
+### 2026-09-03 — Documentation baseline and Agora readiness
+
+- Established the canonical `docs/` hierarchy and project blueprint.
+- Installed/authenticated Agora CLI 0.2.8 and bound the `echosphere` project.
+- Verified RTC included, Signaling enabled, and Conversational AI enabled.
+- Recorded the non-blocking CLI warning that token capability remains reported disabled.
+- Added IP-004 to validate the actual transcript/event contract before relying on provider assumptions.

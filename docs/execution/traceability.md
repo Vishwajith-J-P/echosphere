@@ -33,4 +33,4 @@
 
 ## Status Rule
 
-This matrix records planned coverage, not proof. Evidence links are added only after implementation. Feature status remains authoritative in `execution/features.md`.
+This matrix records planned coverage, not proof. Evidence links are added only after implementation. Feature status remains authoritative in `docs/execution/features.md`.

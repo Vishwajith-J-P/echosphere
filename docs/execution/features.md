@@ -4,6 +4,8 @@
 
 No application code exists. Every feature below is approved and **PLANNED**; unchecked boxes describe acceptance scope, not completed work.
 
+Platform/account configuration and documentation readiness are tracked in the implementation plan, not marked as completed product features.
+
 | ID | Feature | Status | Summary |
 |---|---|---|---|
 | F-001 | Agora voice session | PLANNED | Secure realtime caller/AI audio |
@@ -137,4 +139,4 @@ No application code exists. Every feature below is approved and **PLANNED**; unc
 
 No capability may be checked or marked COMPLETE until its automated tests pass and relevant live/manual validation is recorded. Agora-dependent behavior requires a sandbox integration test in addition to mocked contracts.
 
-Detailed verification is defined in `execution/test_plan.md`; requirement coverage is mapped in `execution/traceability.md`. Planned architecture or schema documentation must not be mistaken for implemented capability.
+Detailed verification is defined in `docs/execution/test_plan.md`; requirement coverage is mapped in `docs/execution/traceability.md`. Planned architecture or schema documentation must not be mistaken for implemented capability.
