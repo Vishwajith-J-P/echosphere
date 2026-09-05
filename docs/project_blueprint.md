@@ -242,6 +242,8 @@ Completed setup:
 - Required Agora environment keys present locally.
 - `.env` ignored and sanitized `.env.example` prepared.
 
+Current implementation status is intentionally narrower than this blueprint: the secure session/token path, Agora gateway lifecycle, and basic caller RTC surface are in progress under F-001. Domain orchestration, transcript normalization, multilingual behavior, interruption handling, handoff, ticketing, and console capabilities remain planned until their mapped evidence is recorded.
+
 Open before or during Phase 0:
 
 - Agora CLI continues to report token capability disabled; resolve/verify before production-style access.
@@ -253,3 +255,12 @@ Open before or during Phase 0:
 ## Authoritative References
 
 This blueprint summarizes rather than replaces the detailed documents. In a conflict: PRD controls product scope; safety policy controls prohibited runtime behavior; TRD controls technical invariants; decisions record rationale; feature registry controls implementation status; code and test evidence determine what actually works.
+
+The implementation-agent build rules are in `docs/execution/ai_harness_contract.md` and are mandatory for sequencing, scope control, safety stops, and completion claims.
+
+Vendor references used for the Phase 0 setup:
+
+- [Agora Skills](https://docs.agora.io/en/introduction/agora-skills)
+- [Conversational AI quickstart](https://docs.agora.io/en/ai/get-started/quickstart)
+- [Agora Next.js agent quickstart](https://github.com/AgoraIO-Conversational-AI/agent-quickstart-nextjs)
+- [Agora CLI walkthrough](https://www.youtube.com/watch?v=YGhnI5f3bp8)

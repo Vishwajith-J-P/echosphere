@@ -12,6 +12,7 @@
 | D-006 | Finalized transcripts only; recording off by default | ACCEPTED | 2026-09-03 |
 | D-007 | Flask plus React/Jinja delivery model | ACCEPTED | 2026-09-03 |
 | D-008 | Canonical documentation lives under docs | ACCEPTED | 2026-09-03 |
+| D-009 | Phase 0 runtime and provider gateway baseline | ACCEPTED | 2026-09-03 |
 
 ## D-001 — Agora Voice Path
 
@@ -82,6 +83,14 @@
 **Alternatives:** Keeping the three documentation directories at the root was functional but did not provide one documentation home. Copying files was rejected because duplicate sources would drift.
 
 **Tradeoffs:** Existing links and agent instructions must use the new paths.
+
+## D-009 — Phase 0 Runtime Baseline
+
+**Decision:** Use Python 3.13 in the `echosphere` Conda environment, Flask 3.1, `agora-agents` 2.7.2 behind an `AgoraGateway`, React 19/TypeScript/Vite, and Agora Web RTC 4.24.3 for the initial provider spike.
+
+**Reasoning:** Pinning the demonstrated toolchain makes the spike reproducible while the gateway prevents Agora lifecycle details from entering route and domain code.
+
+**Tradeoffs:** Managed STT/LLM/TTS model identifiers and live language quality remain sandbox assumptions. RTM and the Agora client toolkit are not accepted into the baseline until their peer-version conflict is resolved and transcript behavior is proven.
 
 ## Proposed Decisions
 

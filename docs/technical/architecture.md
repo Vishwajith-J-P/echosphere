@@ -2,7 +2,7 @@
 
 ## Status
 
-Planned prototype architecture; no application code exists yet.
+Approved target architecture for the prototype. Phase 0 contains a partial implementation of the session/token path, Agora gateway, and caller RTC surface; the feature registry is the only authority for implementation status. This document must not be read as evidence that every component below exists.
 
 ## System Context
 

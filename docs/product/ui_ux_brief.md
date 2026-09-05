@@ -108,4 +108,4 @@ Shows Pending, Synced, Retry scheduled, or Failed with a supervisor retry action
 
 ## Planned Page States
 
-All pages define loading, empty, permission-denied, recoverable error, terminal error, and reconnect behavior as applicable. No UI is implemented yet; patterns become established only after implementation and verification.
+All pages define loading, empty, permission-denied, recoverable error, terminal error, and reconnect behavior as applicable. The Phase 0 caller page implements the basic disclosure, language, connection, error, and end states; transcript, confirmation, reconnect, transfer, and console patterns remain planned.

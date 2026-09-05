@@ -2,13 +2,13 @@
 
 ## Status
 
-No application code exists. Every feature below is approved and **PLANNED**; unchecked boxes describe acceptance scope, not completed work.
+Phase 0 application code exists. Only evidence-backed portions of F-001 are checked; all other features remain planned.
 
 Platform/account configuration and documentation readiness are tracked in the implementation plan, not marked as completed product features.
 
 | ID | Feature | Status | Summary |
 |---|---|---|---|
-| F-001 | Agora voice session | PLANNED | Secure realtime caller/AI audio |
+| F-001 | Agora voice session | IN_PROGRESS | Secure realtime caller/AI audio foundation |
 | F-002 | Multilingual conversation | PLANNED | Hindi, English, and code-switching |
 | F-003 | Interruption/noise handling | PLANNED | Barge-in and focused repair |
 | F-004 | Guided information collection | PLANNED | Prioritized fields and validation |
@@ -21,15 +21,19 @@ Platform/account configuration and documentation readiness are tracked in the im
 
 ## F-001 — Agora Voice Session
 
-**Status:** PLANNED
+**Status:** IN_PROGRESS
 
-- [ ] Server issues short-lived Agora join data without exposing certificates.
-- [ ] Browser joins bidirectional audio and backend starts/stops Agora Conversational AI.
+- [x] Server issues short-lived Agora join data without exposing certificates.
+- [x] Browser implementation joins bidirectional audio and backend starts/stops Agora Conversational AI through an isolated gateway; production build and mocked lifecycle pass.
 - [ ] Normalized events drive session lifecycle and transcript.
 - [ ] Duplicate start/end/callback operations are safe.
 - [ ] Failure produces bounded recovery and human/manual fallback.
 
 **Acceptance:** PRD FR-001, FR-002; AC-002.
+
+**Implementation:** `backend/echosphere/api/routes.py`, `backend/echosphere/services/sessions.py`, `backend/echosphere/services/agora_gateway.py`, `frontend/src/useVoiceSession.ts`, and `frontend/src/App.tsx`.
+
+**Verification limit:** The second checked item proves the implemented browser/server flow and provider contract, not a completed live Agora sandbox call. F-001 remains IN_PROGRESS until live two-way audio and start/stop evidence is recorded.
 
 ## F-002 — Multilingual Conversation
 

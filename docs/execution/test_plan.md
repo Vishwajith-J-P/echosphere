@@ -92,3 +92,11 @@ Language/ASR quality thresholds are established after Phase 0 baseline. Report s
 ## Evidence
 
 Each completed feature records test command, commit/build identifier, environment, policy/model/provider versions, pass/fail counts, latency summary where relevant, and links/paths to redacted artifacts. Manual observation alone cannot complete deterministic domain features.
+
+### Phase 0 evidence — 2026-09-03
+
+- Backend: `python -m pytest -p no:cacheprovider` in Conda environment `echosphere`: 5 passed; two upstream Agora/Pydantic warnings.
+- Configuration smoke: real local configuration loaded; health/readiness returned 200; session creation returned 201 with a token and no server-secret fields.
+- Frontend: `npm run build`: TypeScript and Vite production build passed on Node 24.12/npm 11.6.
+- Supply chain: `npm audit`: 0 known vulnerabilities after upgrading Vite to 7.3.6 and Vitest to 3.2.7.
+- Not yet evidenced: live Agora agent start/audio, Hindi-English/code-switching, transcript events, barge-in latency, or human channel join.

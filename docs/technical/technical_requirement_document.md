@@ -2,7 +2,7 @@
 
 ## Status and Source of Truth
 
-This document defines constraints for the planned EchoSphere prototype. No runtime implementation exists yet. Product behavior is defined in `docs/product/project_requirement_document.md`; planned data is in `docs/technical/backend_schema.md`; current implementation state is in `docs/execution/features.md`.
+This document defines constraints for the EchoSphere prototype. The runtime is only partially implemented; planned contracts must not be treated as completed behavior. Product behavior is defined in `docs/product/project_requirement_document.md`; planned data is in `docs/technical/backend_schema.md`; current implementation state is in `docs/execution/features.md`.
 
 ## Technical Overview
 
@@ -24,7 +24,7 @@ Exact SDK/package versions must be pinned during implementation against then-cur
 |---|---|---|
 | Python + Flask | ACCEPTED | Backend/API framework |
 | React + TypeScript | ACCEPTED | Realtime caller and console UI |
-| Vite | PROPOSED | Frontend build tooling; confirm during scaffold |
+| Vite | ACCEPTED FOR PROTOTYPE | Frontend build tooling for the current React caller surface |
 | Jinja | ACCEPTED/OPTIONAL | Lightweight server shell only |
 | Agora RTC + Conversational AI + Signaling | ACCEPTED | Mandatory voice/event platform |
 | SQLite | ACCEPTED FOR PROTOTYPE | Must remain behind repositories |

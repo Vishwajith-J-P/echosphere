@@ -2,7 +2,7 @@
 
 ## Status
 
-Planned and partially vendor-validated from official documentation current on 2026-09-03. Agora CLI 0.2.8 is installed/authenticated; the workspace is bound to the global `echosphere` project; RTC, Signaling, and Conversational AI are enabled. The CLI still reports token capability disabled as a non-blocking warning. Exact application SDK versions and Hindi-English provider choices remain Phase 0 deliverables.
+Partially implemented and vendor-validated as of 2026-09-03. Agora CLI 0.2.8 is installed/authenticated; RTC, Signaling, Real-Time Speech-to-Text, and Conversational AI are enabled. The server uses `agora-agents` 2.7.2 and the browser uses `agora-rtc-sdk-ng` 4.24.3. Secure token creation and mocked lifecycle tests pass; live Hindi-English model/voice behavior remains unverified.
 
 ## Role in EchoSphere
 
@@ -12,6 +12,8 @@ Official Agora documentation states that the caller and agent join the same RTC 
 
 - https://docs.agora.io/en/ai/get-started/quickstart
 - https://docs.agora.io/en/ai/build/start-stop-agent
+
+The setup workflow was cross-checked against the official [Agora Skills](https://docs.agora.io/en/introduction/agora-skills) guidance, the [Agora Conversational AI quickstart](https://docs.agora.io/en/ai/get-started/quickstart), the [Agora Next.js agent quickstart](https://github.com/AgoraIO-Conversational-AI/agent-quickstart-nextjs), and the supplemental [Agora CLI walkthrough](https://www.youtube.com/watch?v=YGhnI5f3bp8). The written documentation and observed CLI output are the verification authority; the video is orientation only.
 
 ## Credentials and Boundaries
 
@@ -27,6 +29,10 @@ Official Agora documentation states that the caller and agent join the same RTC 
 Never log secrets or full tokens. Token TTL must cover expected call duration plus a small reconnect margin, with renewal implemented before expiry for longer calls.
 
 ## Provisioning and Baseline
+
+The initial gateway configures managed Deepgram STT (`nova-3`, multilingual), OpenAI (`gpt-4o-mini`), and MiniMax TTS (`speech-2.6-turbo`) identifiers to reduce credential variables. These exact identifiers and the selected voice are implementation hypotheses until a live agent starts successfully.
+
+The tested combination of `agora-rtm` 2.2.3 and `agora-agent-client-toolkit` 1.2.0 has incompatible RTC peer constraints, so neither is installed in the Phase 0 browser baseline. IP-004 must select a compatible, officially supported version matrix before transcript/event code is added.
 
 Use Agora Console/CLI to select a project with RTC and Conversational AI enabled and run `agora project doctor --feature convoai`. The official Python agent SDK is currently installed as `agora-agents`; pin the verified version in project dependencies rather than relying on an unbounded latest release.
 

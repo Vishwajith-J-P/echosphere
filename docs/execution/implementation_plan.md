@@ -2,7 +2,7 @@
 
 ## Status
 
-Documentation and scope definition are complete. Application implementation has not started.
+Documentation is complete and Phase 0 implementation is in progress.
 
 ## Completed Preparation
 
@@ -18,9 +18,9 @@ Documentation and scope definition are complete. Application implementation has 
 
 | Task | Status | Outcome |
 |---|---|---|
-| IP-001 | TODO | Verify current Agora Conversational AI lifecycle, credentials, callbacks, Hindi-English model/voice support, barge-in controls, and transfer options against official docs/sandbox |
-| IP-002 | TODO | Create deterministic provider fixtures and gateway contract tests |
-| IP-003 | TODO | Record selected SDK/API versions and resolve proposed architecture decisions |
+| IP-001 | IN_PROGRESS | Secure token/session API, Agora gateway, and RTC caller client implemented; live agent/model, Hindi-English, barge-in, and transfer validation remain |
+| IP-002 | IN_PROGRESS | Fake provider gateway and five API lifecycle/authentication tests added; provider payload fixtures remain |
+| IP-003 | IN_PROGRESS | Python/browser SDK versions pinned and initial runtime stack accepted; transcript package compatibility remains unresolved |
 | IP-004 | TODO | Validate the selected Agora transcript/event mechanism, its authentication guarantees, ordering, redelivery behavior, and payload limits |
 
 **Exit:** A minimal two-way browser call can be started/stopped securely; code-switch, interruption, transcript/event delivery, and browser-channel human handoff feasibility/results are documented.
@@ -29,7 +29,7 @@ Documentation and scope definition are complete. Application implementation has 
 
 | Task | Status | Outcome |
 |---|---|---|
-| IP-010 | TODO | Flask factory, typed configuration, errors, logging, correlation IDs |
+| IP-010 | IN_PROGRESS | Flask factory, typed configuration, safe API errors, and correlation IDs implemented early in Phase 0; structured logging remains |
 | IP-011 | TODO | Initial SQLite migration and repositories for planned entities |
 | IP-012 | TODO | Deterministic conversation state machine and priority-field policy |
 | IP-013 | TODO | Confirmation/correction lifecycle and append-only audit events |
@@ -43,9 +43,9 @@ Documentation and scope definition are complete. Application implementation has 
 
 | Task | Status | Outcome |
 |---|---|---|
-| IP-020 | TODO | Secure session/token endpoints and Agora gateway |
+| IP-020 | IN_PROGRESS | Secure in-memory session/token endpoints and Agora gateway implemented in Phase 0; persistence and live sandbox evidence remain |
 | IP-021 | TODO | Normalized event ingestion with the selected interface's documented authentication/integrity controls, validation, ordering handling, and deduplication |
-| IP-022 | TODO | React caller simulator, microphone/connection states, transcript, and AI disclosure |
+| IP-022 | IN_PROGRESS | React caller simulator implements microphone/basic connection states and AI disclosure; transcript and full recovery states remain |
 | IP-023 | TODO | Hindi/English switching, language metadata, and response policy |
 | IP-024 | TODO | Barge-in cancellation, noise repair, silence/reconnection behavior, and latency telemetry |
 
@@ -102,10 +102,18 @@ Documentation and scope definition are complete. Application implementation has 
 
 ## Current Work
 
-**Active task:** None  
-**Next recommended task:** IP-001 — Agora vendor spike.
+**Active task:** IP-001 — Agora vendor spike
+**Next recommended task:** Run the browser/agent path in the Agora sandbox, then validate IP-004 transcript transport.
 
 ## Plan Change Log
+
+### 2026-09-03 — Phase 0 foundation
+
+- Created the `echosphere` Conda environment with Python 3.13 and pinned backend dependencies.
+- Added a Flask application factory, safe configuration, correlation-aware errors, short-lived Agora token/session endpoints, idempotent start/end behavior, and an Agora Agents gateway.
+- Added a React/Vite caller surface with AI disclosure, language selection, microphone processing, RTC join/publish/playback, and shutdown.
+- Verified five mocked API tests, real-environment token issuance, a production frontend build, and a zero-vulnerability npm audit.
+- Deferred transcript UI because the tested `agora-rtm` and client-toolkit versions have incompatible RTC peer requirements; this must be resolved in IP-004.
 
 ### 2026-09-03 — Documentation baseline and Agora readiness
 
