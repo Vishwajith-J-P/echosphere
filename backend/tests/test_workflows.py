@@ -37,9 +37,11 @@ def test_caller_cannot_read_queue(client):
 
 
 def test_handoff_claim_is_exclusive_and_ticket_is_independent(app, client):
-    url, caller, _ = start_voice(client)
+    url, caller, data = start_voice(client)
     state = client.post(url + '/escalations', json={'trigger': 'human_request'}, headers=caller).json
     escalation = state['conversation']['escalation']
+    queue = client.get('/api/queue').json['items']
+    assert any(item['session_id'] == data['session_id'] and item['status'] == 'escalating' for item in queue)
     payload = {'escalation_id': escalation['id'], 'snapshot_version': escalation['version']}
     assert client.post(url + '/handoff/accept', json=payload).status_code == 200
     assert client.post(url + '/handoff/accept', json=payload).status_code == 200
