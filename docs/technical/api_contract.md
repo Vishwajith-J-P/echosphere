@@ -92,7 +92,7 @@ Returns RTC join material for that authorized agent and moves the escalation ato
 
 ### `POST /api/sessions/{id}/messages`
 
-The assigned human may send an optional text fallback after the handoff is connected:
+The assigned human may send an optional text fallback after the handoff is connected. A caller may also send an optional text fallback while their session is active by presenting the session capability:
 
 ```json
 {"text":"I am reviewing the details now."}

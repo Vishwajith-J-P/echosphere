@@ -24,6 +24,8 @@ function Caller() {
   const [language, setLanguage] = useState<Language>('hi-IN');
   const [capabilities, setCapabilities] = useState<{ voice_ready: boolean; speech_provider: string; voice_requirements?: { checks: Record<string, boolean> } } | null>(null);
   const [notice, setNotice] = useState('');
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
   const voice = useVoiceSession();
   const { snapshot, reconnecting } = useSessionLive(voice.session?.session_id, voice.session?.caller_capability);
   const session = snapshot ?? voice.session;
@@ -37,6 +39,14 @@ function Caller() {
     setNotice('');
     try { await api('/sessions/' + session.session_id + '/escalations', voice.session.caller_capability, { trigger: 'human_request' }); }
     catch (cause) { setNotice((cause as Error).message); }
+  }
+  async function sendText(event: React.FormEvent) {
+    event.preventDefault();
+    if (!voice.session || !message.trim()) return;
+    setSending(true); setNotice('');
+    try { await api('/sessions/' + voice.session.session_id + '/messages', voice.session.caller_capability, { text: message.trim() }); setMessage(''); }
+    catch (cause) { setNotice((cause as Error).message); }
+    finally { setSending(false); }
   }
   const transfer = session?.conversation.escalation;
   const connected = !!session && voice.members.includes(session.agent_uid);
@@ -64,7 +74,6 @@ function Caller() {
         <div className="boundary-note"><strong>A clear boundary</strong><p>We help with support intake. We don’t provide medical, legal, financial, or emergency advice.</p></div>
       </aside>
       <div className="conversation-column">
-        {transfer && <div className="transfer-banner" role="status"><strong>{session?.status === 'human_connected' ? 'Human assistance connected' : session?.status === 'ended' ? 'Transfer could not be completed' : 'Human assistance requested'}</strong><p>{session?.status === 'human_connected' ? 'Your assistant has the context you shared.' : 'Your context is saved. A connection is only confirmed once a person joins. If nobody joins within two minutes, the session will end.'}</p></div>}
         {session && voice.session ? <><section className="panel audio-session" aria-live="polite"><div className="section-title"><h2>Voice conversation</h2><span className="badge">Audio only</span></div><p className="muted">Speak naturally. EchoSphere listens through Agora and replies with audio. Keep this page open to maintain the call.</p><div className="audio-state"><span className="status-dot" /><strong>{connected ? 'Listening and speaking' : 'Connecting audio…'}</strong></div></section><Facts session={session} token={voice.session.caller_capability} />{transfer && <p className="muted small">Your confirmed context is being shared with the operator. Continue speaking normally.</p>}</> : <section className="welcome panel">
           <p className="eyebrow">How we’ll help</p><h2>Space to explain.<br />Someone to listen.</h2><ol className="steps"><li><span>01</span><div><h3>Speak naturally</h3><p>Start in Hindi, English, or Tamil. Tell us what you need help with.</p></div></li><li><span>02</span><div><h3>Check the important details</h3><p>We’ll read them back. Confirm or correct anything before it becomes part of your case.</p></div></li><li><span>03</span><div><h3>Continue with a person</h3><p>Ask at any point. Your assistant receives the context so you don’t have to start over.</p></div></li></ol>
           <div className="welcome-bottom"><span lang="hi">आपकी भाषा।</span><span>Your pace.</span><span lang="ta">உங்கள் குரல்.</span></div>

@@ -189,11 +189,15 @@ def connected(session_id):
 
 @api.post('/sessions/<session_id>/messages')
 def human_message(session_id):
-    identity = operator(required=True)
     data = payload(HumanMessageInput)
-    return jsonify(service().command(session_id, '', 'turn', {
-        'text': data['text'], 'event_id': 'human:' + str(uuid4())
-    }, identity))
+    identity = operator()
+    if identity:
+        return jsonify(service().command(session_id, '', 'turn', {
+            'text': data['text'], 'event_id': 'human:' + str(uuid4())
+        }, identity))
+    return jsonify(service().command(session_id, bearer_token(), 'turn', {
+        'text': data['text'], 'event_id': 'caller:' + str(uuid4())
+    }))
 
 
 @api.post('/sessions/<session_id>/token')

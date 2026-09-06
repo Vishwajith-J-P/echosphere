@@ -36,6 +36,13 @@ def test_caller_cannot_read_queue(client):
     assert client.get('/api/queue', headers=headers).status_code in {401, 403}
 
 
+def test_customer_can_send_optional_text_message(client):
+    url, headers, _ = start_voice(client)
+    response = client.post(url + '/messages', json={'text': 'I need help with my internet'}, headers=headers)
+    assert response.status_code == 200
+    assert any(turn['speaker'] == 'caller' and turn['text'] == 'I need help with my internet' for turn in response.json['transcript'])
+
+
 def test_handoff_claim_is_exclusive_and_ticket_is_independent(app, client):
     url, caller, data = start_voice(client)
     state = client.post(url + '/escalations', json={'trigger': 'human_request'}, headers=caller).json

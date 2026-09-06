@@ -8,7 +8,7 @@ Platform/account configuration and documentation readiness are tracked in the im
 
 | ID | Feature | Status | Summary |
 |---|---|---|---|
-| F-001 | Agora voice session | IN_PROGRESS | Secure realtime caller/AI audio foundation |
+| F-001 | Agora voice session | IN_PROGRESS | Secure realtime caller/AI audio foundation with optional text fallback |
 | F-002 | Multilingual conversation | IN_PROGRESS | Hindi, English, Tamil, and code-switching |
 | F-003 | Interruption/noise handling | PLANNED | Barge-in and focused repair |
 | F-004 | Guided information collection | PLANNED | Prioritized fields and validation |
