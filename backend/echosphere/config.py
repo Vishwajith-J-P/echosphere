@@ -25,6 +25,8 @@ class Settings:
     agora_token_ttl_seconds: int = 3600
     app_env: str = "development"
     secret_key: str = ""
+    operator_access_token: str = ''
+    operator_username: str = 'supervisor'
     database_path: str = ':memory:'
     public_base_url: str = ''
     speech_provider: str = 'deepgram'
@@ -69,6 +71,8 @@ class Settings:
             agora_token_ttl_seconds=token_ttl,
             app_env=os.getenv("APP_ENV", "development").strip().lower(),
             secret_key=os.getenv("SECRET_KEY", ""),
+            operator_access_token=os.getenv('OPERATOR_ACCESS_TOKEN', '').strip(),
+            operator_username=os.getenv('OPERATOR_USERNAME', 'supervisor').strip() or 'supervisor',
             database_path=os.getenv('DATABASE_PATH', str(PROJECT_ROOT / 'instance' / 'echosphere.sqlite3')),
             public_base_url=os.getenv('PUBLIC_BASE_URL', '').rstrip('/'),
             speech_provider=os.getenv('SPEECH_PROVIDER', 'deepgram'),

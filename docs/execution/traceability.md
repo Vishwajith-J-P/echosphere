@@ -4,6 +4,8 @@
 
 The supported language contract is `hi-IN`, `en-IN`, and `ta-IN`. Voice-provider transcripts exercise deterministic confirmation, correction, and escalation for all three; `SPEECH_PROVIDER=sarvam` selects Sarvam STT/TTS for the Indian-language voice path, while the documented Deepgram/MiniMax fallback remains available. Local browser coverage verifies the voice-only caller surface against an in-process fixture. Live Agora media, provider transcript events, interruption latency, and real browser-channel handoff remain open evidence items.
 
+Operator-console verification also covers the passwordless access-token contract: login accepts only `OPERATOR_ACCESS_TOKEN`, and migration 2 removes legacy password-hash storage.
+
 ## Matrix
 
 | Requirement | Feature(s) | Flow(s) | Planned verification |

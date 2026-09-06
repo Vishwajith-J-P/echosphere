@@ -38,10 +38,14 @@ CREATE TABLE IF NOT EXISTS tickets (
  id TEXT PRIMARY KEY, session_id TEXT NOT NULL UNIQUE REFERENCES sessions(id) ON DELETE CASCADE,
  version INTEGER NOT NULL, payload TEXT NOT NULL
 );
-CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password_hash TEXT NOT NULL, role TEXT NOT NULL CHECK(role IN ('agent','supervisor')));
-CREATE TABLE IF NOT EXISTS operator_sessions (token_hash TEXT PRIMARY KEY, username TEXT NOT NULL REFERENCES users(username), expires_at REAL NOT NULL);
 CREATE TABLE IF NOT EXISTS admission (bucket TEXT NOT NULL, window INTEGER NOT NULL, count INTEGER NOT NULL, PRIMARY KEY(bucket, window));
 PRAGMA user_version=1;
+'''
+
+MIGRATION_2 = '''
+DROP TABLE IF EXISTS operator_sessions;
+DROP TABLE IF EXISTS users;
+PRAGMA user_version=2;
 '''
 
 
@@ -55,10 +59,13 @@ class Database:
         self.connection.execute('PRAGMA journal_mode=WAL')
         self.lock = threading.RLock()
         version = self.connection.execute('PRAGMA user_version').fetchone()[0]
-        if version > 1:
+        if version > 2:
             raise RuntimeError('Database is newer than this application')
         if version == 0:
             self.connection.executescript('BEGIN IMMEDIATE;\n' + MIGRATION_1 + '\nCOMMIT;')
+            version = 1
+        if version == 1:
+            self.connection.executescript('BEGIN IMMEDIATE;\n' + MIGRATION_2 + '\nCOMMIT;')
 
     @contextmanager
     def transaction(self):

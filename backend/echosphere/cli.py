@@ -1,6 +1,5 @@
 """Local operator provisioning and bounded runtime maintenance."""
 import argparse
-import getpass
 import threading
 
 
@@ -21,20 +20,11 @@ def start_maintenance(app):
 
 def main():
     parser = argparse.ArgumentParser(description='EchoSphere local administration')
-    parser.add_argument('command', choices=['create-user', 'purge', 'doctor'])
-    parser.add_argument('--username')
-    parser.add_argument('--role', choices=['agent', 'supervisor'], default='agent')
+    parser.add_argument('command', choices=['purge', 'doctor'])
     args = parser.parse_args()
     from . import create_app
     app = create_app()
-    if args.command == 'create-user':
-        username = args.username or input('Username: ').strip()
-        password = getpass.getpass('Password (12+ characters): ')
-        if password != getpass.getpass('Confirm password: '):
-            raise SystemExit('Passwords did not match')
-        app.extensions['auth_service'].create_user(username, password, args.role)
-        print('Operator created. No password was logged.')
-    elif args.command == 'purge':
+    if args.command == 'purge':
         print('Expired synthetic sessions purged:', app.extensions['session_service'].purge())
     else:
         settings = app.config['SETTINGS']

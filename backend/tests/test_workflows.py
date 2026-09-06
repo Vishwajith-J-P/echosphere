@@ -37,12 +37,9 @@ def test_caller_cannot_read_queue(client):
 
 
 def test_handoff_claim_is_exclusive_and_ticket_is_independent(app, client):
-    from echosphere.services.auth import AuthService
     auth = app.extensions['auth_service']
-    auth.create_user('alice', 'secure-test-password-a', 'agent')
-    auth.create_user('bob', 'secure-test-password-b', 'agent')
-    alice = {'Authorization': 'Bearer ' + auth.login('alice', 'secure-test-password-a')['token']}
-    bob = {'Authorization': 'Bearer ' + auth.login('bob', 'secure-test-password-b')['token']}
+    alice = {'Authorization': 'Bearer ' + auth.login('test-operator-token')['token']}
+    bob = {'Authorization': 'Bearer invalid-operator-token'}
     url, caller, _ = start_voice(client)
     state = client.post(url + '/escalations', json={'trigger': 'human_request'}, headers=caller).json
     escalation = state['conversation']['escalation']
@@ -60,3 +57,10 @@ def test_custom_llm_requires_separate_provider_auth(client):
     _, headers, data = start_voice(client)
     response = client.post('/api/sessions/' + data['session_id'] + '/llm/chat/completions', headers=headers, json={'messages': []})
     assert response.status_code in {401, 403}
+
+
+def test_operator_auth_uses_access_token_only(client):
+    response = client.post('/api/auth/login', json={'access_token': 'test-operator-token'})
+    assert response.status_code == 200
+    assert response.json['username'] == 'supervisor'
+    assert client.post('/api/auth/login', json={'username': 'supervisor'}).status_code == 400

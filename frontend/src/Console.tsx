@@ -11,11 +11,11 @@ export function Console() {
   async function login(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); setError(''); setPending(true);
     const data = new FormData(event.currentTarget);
-    try { setOperator(await api<Operator>('/auth/login', undefined, { username: data.get('username'), password: data.get('password') })); }
+    try { setOperator(await api<Operator>('/auth/login', undefined, { access_token: data.get('access_token') })); }
     catch (cause) { setError((cause as Error).message); }
     finally { setPending(false); }
   }
-  if (!operator) return <main className="page login-page"><section className="panel login-panel"><p className="eyebrow">Operator workspace</p><h1>Welcome back.</h1><p className="muted">Sign in to review context and continue a caller’s conversation.</p><form onSubmit={event => void login(event)}><label htmlFor="username">Username</label><input id="username" name="username" autoComplete="username" required /><label htmlFor="password">Password</label><input id="password" name="password" type="password" autoComplete="current-password" required /><button className="primary" disabled={pending}>{pending ? 'Signing in…' : 'Sign in'}</button></form>{error && <p role="alert" className="error">{error}</p>}<p className="small muted">Access is limited to configured demo operators.</p></section></main>;
+  if (!operator) return <main className="page login-page"><section className="panel login-panel"><p className="eyebrow">Operator workspace</p><h1>Welcome back.</h1><p className="muted">Sign in with the configured operator access token to review context and continue a caller's conversation.</p><form onSubmit={event => void login(event)}><label htmlFor="access_token">Operator access token</label><input id="access_token" name="access_token" type="text" autoComplete="off" spellCheck={false} required /><button className="primary" disabled={pending}>{pending ? 'Signing in...' : 'Sign in'}</button></form>{error && <p role="alert" className="error">{error}</p>}<p className="small muted">Access is limited to the configured operator token.</p></section></main>;
   return <Workspace operator={operator} logout={() => { void api('/auth/logout', operator.token, {}); setOperator(null); }} />;
 }
 

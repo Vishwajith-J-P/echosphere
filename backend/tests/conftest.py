@@ -29,6 +29,8 @@ def settings() -> Settings:
         agora_customer_secret="test-secret",
         app_env="test",
         secret_key="test-only",
+        operator_access_token="test-operator-token",
+        operator_username="supervisor",
     )
 
 

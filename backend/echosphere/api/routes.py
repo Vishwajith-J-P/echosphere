@@ -86,8 +86,7 @@ class AcceptInput(Input):
 
 
 class LoginInput(Input):
-    username: str = Field(min_length=1, max_length=80)
-    password: str = Field(min_length=1, max_length=256)
+    access_token: str = Field(min_length=1, max_length=256)
 
 
 def payload(model):
@@ -138,7 +137,7 @@ def end_session(session_id: str):
 def login():
     data = payload(LoginInput)
     current_app.extensions['database'].limit('login:' + (request.remote_addr or 'local'), 8)
-    return jsonify(current_app.extensions['auth_service'].login(**data))
+    return jsonify(current_app.extensions['auth_service'].login(data['access_token']))
 
 
 @api.post('/auth/logout')

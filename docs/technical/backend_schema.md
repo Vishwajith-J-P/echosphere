@@ -214,4 +214,4 @@ Prototype defaults use synthetic data only. Exact real-data periods are unresolv
 
 ## Schema Change Log
 
-Migration 1 was implemented on 2026-09-06 for the local prototype. It provides durable session aggregates, append-only audit events, processed-event idempotency, handoff snapshots, integration jobs, local tickets, operator users/sessions, and admission counters. The logical entities above remain the contract; conversation and transcript JSON stay inside the session aggregate until production normalization.
+Migration 1 was implemented on 2026-09-06 for the local prototype. Migration 2 removes the obsolete operator users/sessions tables and their password hashes. The runtime now uses a configured passwordless operator access token; admission counters and durable session aggregates remain local SQLite state. The logical entities above remain the contract; conversation and transcript JSON stay inside the session aggregate until production normalization.
