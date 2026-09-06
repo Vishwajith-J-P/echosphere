@@ -16,7 +16,7 @@ Platform/account configuration and documentation readiness are tracked in the im
 | F-006 | Confidence and safety policy | PLANNED | Explainable escalation decisions |
 | F-007 | Human handoff | PLANNED | Warm transfer with context |
 | F-008 | Ticket integration | PLANNED | Idempotent case sync and retry |
-| F-009 | Agent/supervisor console | IN_PROGRESS | Live queue, caller context, audio controls, and optional text fallback |
+| F-009 | Agent/supervisor console | IN_PROGRESS | Live queue, caller context, audio controls, optional text fallback, and queue cleanup |
 | F-010 | Audit, privacy, observability | PLANNED | Safe operational evidence |
 
 ## F-001 — Agora Voice Session

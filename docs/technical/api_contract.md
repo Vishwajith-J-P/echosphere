@@ -100,6 +100,10 @@ The assigned human may send an optional text fallback after the handoff is conne
 
 The message is appended to the session transcript as a human turn. Voice through Agora remains the primary channel.
 
+### `POST /api/queue/clear`
+
+Local supervisor-console action. Marks all pending handoffs as cancelled, keeps their session and audit history, and removes them from the active queue. Ended sessions are excluded automatically from queue reads.
+
 ### `POST /api/webhooks/agora`
 
 Accepts only the selected Agora event format. The adapter authenticates with documented controls, validates size/schema/freshness where available, deduplicates provider event ID, stores a payload hash, and acknowledges duplicates safely. Raw payload retention is off by default.

@@ -58,3 +58,12 @@ def test_custom_llm_requires_separate_provider_auth(client):
     _, headers, data = start_voice(client)
     response = client.post('/api/sessions/' + data['session_id'] + '/llm/chat/completions', headers=headers, json={'messages': []})
     assert response.status_code in {401, 403}
+
+
+def test_operator_can_clear_pending_handoff_queue(client):
+    url, caller, data = start_voice(client)
+    client.post(url + '/escalations', json={'trigger': 'human_request'}, headers=caller)
+    response = client.post('/api/queue/clear')
+    assert response.status_code == 200
+    assert response.json['cleared'] == 1
+    assert client.get('/api/queue').json['items'] == []

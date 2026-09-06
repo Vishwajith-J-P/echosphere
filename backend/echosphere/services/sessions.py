@@ -212,13 +212,30 @@ class SessionService:
 
     def queue(self, limit=50, offset=0):
         with self.database.transaction() as connection:
-            rows = connection.execute("SELECT data FROM sessions WHERE json_extract(data,'$.conversation.escalation') IS NOT NULL ORDER BY updated_at DESC LIMIT ? OFFSET ?", (limit, offset)).fetchall()
+            rows = connection.execute("SELECT data FROM sessions WHERE json_extract(data,'$.desired')='active' AND json_extract(data,'$.conversation.escalation.status') IN ('requested','offered','accepted') ORDER BY updated_at DESC LIMIT ? OFFSET ?", (limit, offset)).fetchall()
         result = []
         for row in rows:
             state = json.loads(row['data'])
             result.append({'session_id': state['session_id'], 'status': state['status'], 'language': state['conversation']['language'],
                 'escalation': state['conversation']['escalation'], 'ticket_status': state['ticket_status'], 'mode': state['mode']})
         return {'items': result, 'limit': limit, 'offset': offset}
+
+    def clear_queue(self):
+        """Dismiss pending handoffs while retaining the session/audit history."""
+        cleared = 0
+        with self.database.transaction() as connection:
+            rows = connection.execute("SELECT id, data FROM sessions WHERE json_extract(data,'$.desired')='active' AND json_extract(data,'$.conversation.escalation.status') IN ('requested','offered','accepted')").fetchall()
+            for row in rows:
+                state = json.loads(row['data'])
+                state['conversation']['escalation']['status'] = 'cancelled'
+                state['conversation']['status'] = 'collecting'
+                state['status'] = 'active'
+                state['desired'] = 'active'
+                state['generation'] += 1
+                Database.event(connection, row['id'], 'handoff.cleared', {'reason': 'operator_queue_clear'})
+                Database.save(connection, state)
+                cleared += 1
+        return {'cleared': cleared}
 
     def accept(self, session_id, operator, payload):
         with self.database.transaction() as connection:

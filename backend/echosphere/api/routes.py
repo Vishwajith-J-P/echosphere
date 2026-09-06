@@ -148,6 +148,12 @@ def queue():
     return jsonify(service().queue(limit, offset))
 
 
+@api.post('/queue/clear')
+def clear_queue():
+    operator(required=True, supervisor=True)
+    return jsonify(service().clear_queue())
+
+
 def command(session_id, action, data):
     identity = operator()
     if identity and action in {'confirm', 'correct'}:
