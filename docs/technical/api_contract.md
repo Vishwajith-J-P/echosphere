@@ -90,6 +90,16 @@ Agent-only, requires handoff version:
 
 Returns RTC join material for that authorized agent and moves the escalation atomically to accepted. A stale snapshot returns `409 STALE_HANDOFF_SNAPSHOT`.
 
+### `POST /api/sessions/{id}/messages`
+
+The assigned human may send an optional text fallback after the handoff is connected:
+
+```json
+{"text":"I am reviewing the details now."}
+```
+
+The message is appended to the session transcript as a human turn. Voice through Agora remains the primary channel.
+
 ### `POST /api/webhooks/agora`
 
 Accepts only the selected Agora event format. The adapter authenticates with documented controls, validates size/schema/freshness where available, deduplicates provider event ID, stores a payload hash, and acknowledges duplicates safely. Raw payload retention is off by default.

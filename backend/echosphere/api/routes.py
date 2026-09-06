@@ -4,6 +4,7 @@ import hashlib
 import json
 import secrets
 import time
+from uuid import uuid4
 
 from flask import Blueprint, Response, current_app, jsonify, request, stream_with_context
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
@@ -69,6 +70,10 @@ class Input(BaseModel):
 
 class MediaReadyInput(Input):
     media_ready: bool = False
+
+
+class HumanMessageInput(Input):
+    text: str = Field(min_length=1, max_length=600)
 
 
 class SessionInput(Input):
@@ -174,6 +179,15 @@ def connected(session_id):
         # Run assignment authorization before exposing readiness state.
         return jsonify(service().connected(session_id, identity, media_ready=False))
     return jsonify(service().connected(session_id, identity, media_ready=True))
+
+
+@api.post('/sessions/<session_id>/messages')
+def human_message(session_id):
+    identity = operator(required=True)
+    data = payload(HumanMessageInput)
+    return jsonify(service().command(session_id, '', 'turn', {
+        'text': data['text'], 'event_id': 'human:' + str(uuid4())
+    }, identity))
 
 
 @api.post('/sessions/<session_id>/token')

@@ -49,6 +49,9 @@ def test_handoff_claim_is_exclusive_and_ticket_is_independent(app, client):
     assert connected.status_code == 200
     assert connected.json['status'] == 'human_connected'
     assert connected.json['provider_status'] == 'stopped'
+    message = client.post(url + '/messages', json={'text': 'I am here to help.'})
+    assert message.status_code == 200
+    assert message.json['transcript'][-1]['speaker'] == 'human'
 
 
 def test_custom_llm_requires_separate_provider_auth(client):
