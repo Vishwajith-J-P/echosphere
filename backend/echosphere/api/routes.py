@@ -161,7 +161,7 @@ def command(session_id, action, data):
     if identity and action == 'turn':
         state = service().get(session_id, operator=identity)
         escalation = state['conversation']['escalation']
-        if not escalation or escalation['assigned_to'] != identity['username'] or state['status'] != 'human_connected':
+        if not escalation or escalation['assigned_to'] != identity['username'] or state['status'] not in {'transferring', 'human_connected'}:
             raise ApiError('FORBIDDEN', 'Join your assigned call before sending a message.', 403)
     current_app.extensions['database'].limit('command:' + session_id, 90)
     return jsonify(service().command(session_id, '' if identity else bearer_token(), action, data, identity))

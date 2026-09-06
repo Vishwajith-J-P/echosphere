@@ -7,7 +7,7 @@ import secrets
 import time
 from uuid import uuid4
 
-from ..domain.conversation import Conversation, TERMINAL
+from ..domain.conversation import Conversation, HANDOFF, TERMINAL
 from ..domain.faq import is_question, limitation, lookup as lookup_faq
 from ..errors import ApiError
 from ..storage import Database
@@ -175,7 +175,7 @@ class SessionService:
                         raise ApiError('RATE_LIMITED', 'The turn limit was reached. Request a person or end the call.', 429)
                     self._append(state, 'human' if operator and call['status'] == 'human_connected' else 'caller', payload['text'])
                     before = json.loads(json.dumps(call))
-                    reply = '' if call['status'] == 'human_connected' else Conversation.turn(call, payload['text'], speech_confirmation=provider and payload.get('confirmation_context', False))
+                    reply = '' if operator and call['status'] in HANDOFF else ('' if call['status'] == 'human_connected' else Conversation.turn(call, payload['text'], speech_confirmation=provider and payload.get('confirmation_context', False)))
                     faq = lookup_faq(payload['text'], call['language']) if provider else None
                     if provider and not before['fields'] and not before['challenge'] and call['escalation'] is None and (faq or is_question(payload['text'])):
                         call = before
