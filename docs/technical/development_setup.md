@@ -61,8 +61,6 @@ Copy `.env.example` to the location loaded by the Flask process. Values below ar
 | `AGORA_TOKEN_TTL_SECONDS` | No | `3600`; use a short-lived value suitable for the demo |
 | `APP_ENV` | No | `development` locally |
 | `SECRET_KEY` | Yes outside tests | Random server-side signing key; never use a published example value |
-| `OPERATOR_ACCESS_TOKEN` | Console only | Random bearer token used for passwordless operator access; never expose or commit it |
-| `OPERATOR_USERNAME` | No | Display name for the configured operator; defaults to `supervisor` |
 | `DATABASE_PATH` | No | `instance/echosphere.sqlite3`; durable local SQLite store |
 | `PUBLIC_BASE_URL` | Voice only | Public HTTPS URL used by Agora CustomLLM to call the controlled API |
 | `SPEECH_PROVIDER` | No | `deepgram` fallback or `sarvam` for Sarvam STT/TTS |
@@ -77,7 +75,6 @@ The browser may receive only the App ID, channel, UID, short-lived RTC token, ex
 3. In the project security/settings area, enable the primary **App Certificate** if it is disabled, then copy it into `AGORA_APP_CERTIFICATE`. This is the signing secret used by the backend to mint RTC tokens.
 4. Open the account-level **Developer Toolkit → RESTful API** page, choose **Add a secret**, and create/download the REST credentials. Put the Customer ID in `AGORA_CUSTOMER_ID` and the Customer Secret in `AGORA_CUSTOMER_SECRET`. Agora documents that the Customer Secret may only be downloadable once, so store it securely immediately.
 5. `SECRET_KEY` is not an Agora credential. Generate a long random value locally for Flask session/signing protection with a cryptographically secure generator, and place it only in the root `.env` file.
-6. Generate a separate operator token with `python -c "import secrets; print(secrets.token_urlsafe(32))"` and set it as `OPERATOR_ACCESS_TOKEN`. The console uses this token instead of a username/password account.
 
 The Customer ID/Secret authenticate Agora REST API calls; they are separate from the project App ID/App Certificate. Never paste any of these values into chat, source control, browser code, screenshots, or issue comments. See the [Agora Console REST API reference](https://github.com/AgoraIO/docs-portal/blob/main/content/docs/en/api-reference/api-ref/console/solutions-agora-console-rest-api.md) for the authentication distinction.
 
@@ -91,7 +88,6 @@ Backend:
 conda activate echosphere
 cd backend
 python -m pip install -r requirements.txt
-python -c "import secrets; print(secrets.token_urlsafe(32))"  # put the result in OPERATOR_ACCESS_TOKEN
 python run.py
 ```
 
@@ -148,7 +144,7 @@ Use these defaults unless a documented decision replaces them:
 - transcript retention: finalized turns only, synthetic data;
 - supported languages: Hindi (`hi-IN`), English (`en-IN`), and Tamil (`ta-IN`);
 - caller authentication: one short-lived capability bound to one session;
-- operator authentication: one configured passwordless access token with a display name.
+- operator authentication: none for the local console.
 
 These defaults are for a demonstrable prototype. They do not authorize production deployment or domain-specific advice.
 

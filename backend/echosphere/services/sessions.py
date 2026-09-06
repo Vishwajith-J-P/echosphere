@@ -11,14 +11,14 @@ from ..domain.conversation import Conversation, TERMINAL
 from ..domain.faq import is_question, limitation, lookup as lookup_faq
 from ..errors import ApiError
 from ..storage import Database
-from .auth import AuthService, digest
+def digest(value: str) -> str:
+    return hashlib.sha256(value.encode()).hexdigest()
 
 
 class SessionService:
     def __init__(self, gateway, settings, database=None):
         self._gateway, self._settings = gateway, settings
         self.database = database or Database(settings.database_path)
-        self.auth = AuthService(self.database, settings.operator_access_token, settings.operator_username)
 
     def control_token(self, session_id):
         return hmac.new(self._settings.secret_key.encode(), ('provider:' + session_id).encode(), hashlib.sha256).hexdigest()

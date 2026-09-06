@@ -18,7 +18,7 @@ export interface SessionStatus {
   reply?: string;
 }
 export interface SessionCreated extends SessionStatus { caller_capability: string; rtc: Rtc | null }
-export interface Operator { token: string; username: string; role: 'agent' | 'supervisor' }
+export interface Operator { username: string; role: 'agent' | 'supervisor' }
 export interface QueueItem { session_id: string; status: string; language: Language; mode: Mode; escalation: Escalation; ticket_status: string }
 
 export async function api<T>(path: string, token?: string, body?: unknown, signal?: AbortSignal): Promise<T> {
@@ -47,8 +47,8 @@ export function parseSseFrame(frame: string): SessionStatus | null {
   return value ? JSON.parse(value) as SessionStatus : null;
 }
 // Fetch permits bearer headers; credentials never enter an EventSource URL.
-export async function watchSession(id: string, token: string, signal: AbortSignal, update: (state: SessionStatus) => void) {
-  const response = await fetch('/api/sessions/' + id + '/events', { headers: { Authorization: 'Bearer ' + token }, signal });
+export async function watchSession(id: string, token: string | undefined, signal: AbortSignal, update: (state: SessionStatus) => void) {
+  const response = await fetch('/api/sessions/' + id + '/events', { headers: token ? { Authorization: 'Bearer ' + token } : {}, signal });
   if (!response.ok || !response.body) throw new Error('Live updates disconnected. Reconnecting…');
   const reader = response.body.getReader();
   const decoder = new TextDecoder();

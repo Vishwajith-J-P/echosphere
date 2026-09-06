@@ -100,7 +100,7 @@ ACCEPTED under the user's instruction to build the entire documented prototype w
 
 Use Agora's documented CustomLLM interface to call a session-bound authenticated Flask endpoint. It returns only deterministic permitted intake/confirmation/transfer directives, never arbitrary generated advice. Agora provider transcripts are stored at that trusted endpoint; generated assistant content is labeled delivery unknown, not proof of playback. Browser status uses authenticated SSE snapshots, while the caller's only interaction channel is Agora audio.
 
-SQLite's standard-library driver and explicit versioned migrations are accepted for the single-process prototype. Durable conversation aggregates, field history, audit events, and ticket jobs replace process-local storage. SSE is accepted. Demo operators use one configured passwordless access token; the browser holds the opaque bearer credential only in memory. Legacy password-account tables are removed by migration 2.
+SQLite's standard-library driver and explicit versioned migrations are accepted for the single-process prototype. Durable conversation aggregates, field history, audit events, and ticket jobs replace process-local storage. SSE is accepted. The local operator console has no login or credential gate. Legacy account tables are removed by migration 2.
 
 Default generic intake requires intent and issue_details; contact and location are optional unless deployment policy explicitly enables them. Intake completion leaves the support case open for human follow-up. Required-field refusal escalates; optional refusal skips. Two focused failed repairs escalate. The caller surface is voice-only; Agora speech is the sole input/output channel.
 

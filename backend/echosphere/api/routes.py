@@ -85,10 +85,6 @@ class AcceptInput(Input):
     snapshot_version: int = Field(ge=1, strict=True)
 
 
-class LoginInput(Input):
-    access_token: str = Field(min_length=1, max_length=256)
-
-
 def payload(model):
     data = request.get_json(silent=True)
     if not isinstance(data, dict):
@@ -100,11 +96,11 @@ def payload(model):
 
 
 def operator(required=False, supervisor=False):
-    identity = current_app.extensions['auth_service'].identify(bearer_token())
-    if required and not identity:
-        raise ApiError('FORBIDDEN', 'Operator access is required.', 403)
-    if supervisor and (not identity or identity['role'] != 'supervisor'):
-        raise ApiError('FORBIDDEN', 'Supervisor access is required.', 403)
+    # The local prototype has no operator login. Console routes use this fixed
+    # local identity; caller/provider routes remain bearer-capability protected.
+    identity = None if request.headers.get('Authorization') else {'username': 'local-operator', 'role': 'supervisor'}
+    if required and identity is None:
+        raise ApiError('FORBIDDEN', 'This endpoint is for the local operator console.', 403)
     return identity
 
 
@@ -120,7 +116,8 @@ def create_session():
 
 @api.get("/sessions/<session_id>")
 def get_session(session_id: str):
-    return jsonify(service().get(session_id, bearer_token(), operator()))
+    identity = operator()
+    return jsonify(service().get(session_id, '' if identity else bearer_token(), identity))
 
 
 @api.post("/sessions/<session_id>/start")
@@ -130,20 +127,8 @@ def start_session(session_id: str):
 
 @api.post("/sessions/<session_id>/end")
 def end_session(session_id: str):
-    return jsonify(service().end(session_id, bearer_token(), operator())), 202
-
-
-@api.post('/auth/login')
-def login():
-    data = payload(LoginInput)
-    current_app.extensions['database'].limit('login:' + (request.remote_addr or 'local'), 8)
-    return jsonify(current_app.extensions['auth_service'].login(data['access_token']))
-
-
-@api.post('/auth/logout')
-def logout():
-    current_app.extensions['auth_service'].logout(bearer_token())
-    return jsonify(status='signed_out')
+    identity = operator()
+    return jsonify(service().end(session_id, '' if identity else bearer_token(), identity)), 202
 
 
 @api.get('/queue')
@@ -168,7 +153,7 @@ def command(session_id, action, data):
         if not escalation or escalation['assigned_to'] != identity['username'] or state['status'] != 'human_connected':
             raise ApiError('FORBIDDEN', 'Join your assigned call before sending a message.', 403)
     current_app.extensions['database'].limit('command:' + session_id, 90)
-    return jsonify(service().command(session_id, bearer_token(), action, data, identity))
+    return jsonify(service().command(session_id, '' if identity else bearer_token(), action, data, identity))
 
 
 @api.post('/sessions/<session_id>/escalations')
@@ -193,12 +178,14 @@ def connected(session_id):
 
 @api.post('/sessions/<session_id>/token')
 def renew(session_id):
-    return jsonify(service().renew(session_id, bearer_token(), operator()))
+    identity = operator()
+    return jsonify(service().renew(session_id, '' if identity else bearer_token(), identity))
 
 
 @api.get('/sessions/<session_id>/events')
 def events(session_id):
-    identity, token, sessions = operator(), bearer_token(), service()
+    identity, sessions = operator(), service()
+    token = '' if identity else bearer_token()
     sessions.get(session_id, token, identity)
 
     @stream_with_context
@@ -206,8 +193,6 @@ def events(session_id):
         previous = ''
         # Bounded streams permit credential revalidation and prevent permanent workers.
         for _ in range(25):
-            if identity and not sessions.auth.identify(token):
-                break
             try:
                 state = sessions.get(session_id, token, identity)
             except ApiError:

@@ -8,12 +8,12 @@ export function useSessionLive(id: string | undefined, token: string | undefined
   // https://react.dev/reference/react/useEffect
   useEffect(() => {
     setSnapshot(null);
-    if (!id || !token) return;
+    if (!id) return;
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout>;
     async function connect() {
       try {
-        await watchSession(id!, token!, controller.signal, state => {
+        await watchSession(id!, token, controller.signal, state => {
           setSnapshot(state); setReconnecting(false);
         });
       } catch {

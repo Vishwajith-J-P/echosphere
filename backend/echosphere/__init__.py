@@ -6,7 +6,6 @@ from .errors import register_error_handlers
 from .services.agora_gateway import AgoraGateway
 from .services.sessions import SessionService
 from .storage import Database
-from .services.auth import AuthService
 
 
 def create_app(
@@ -25,7 +24,6 @@ def create_app(
 
     database = Database(resolved.database_path)
     app.extensions['database'] = database
-    app.extensions['auth_service'] = AuthService(database, resolved.operator_access_token, resolved.operator_username)
     app.extensions["session_service"] = SessionService(
         gateway=gateway or AgoraGateway(resolved),
         settings=resolved,

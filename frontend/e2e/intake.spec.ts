@@ -13,13 +13,13 @@ test('caller exposes voice-only intake and no text controls', async ({ page }) =
   expect(errors).toEqual([]);
 });
 
-test('small screen remains readable and operator route requires login', async ({ page }) => {
+test('small screen remains readable and operator console opens directly', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 760 });
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: 'test-results/caller-mobile.png', fullPage: true });
   await page.goto('/console');
-  await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Conversations, with context.' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

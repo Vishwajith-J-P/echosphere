@@ -2,7 +2,7 @@
 
 ## Status
 
-The local implementation slice is present across the voice-only backend, browser caller, operator console, durable SQLite store, and mock ticket adapter. A feature remains `IN_PROGRESS` where live Agora evidence or production hardening is still required. Operator access is passwordless: one configured bearer token is used, and legacy password-account tables are removed by database migration 2.
+The local implementation slice is present across the voice-only backend, browser caller, operator console, durable SQLite store, and mock ticket adapter. A feature remains `IN_PROGRESS` where live Agora evidence or production hardening is still required. The local operator console has no login or credential gate; caller and provider media/API capabilities remain separate.
 
 Platform/account configuration and documentation readiness are tracked in the implementation plan, not marked as completed product features.
 

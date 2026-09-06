@@ -13,8 +13,7 @@ class NoVoiceGateway:
         raise RuntimeError('Live voice is disabled in browser fixtures')
 
 
-app = create_app(Settings('', '', '', '', secret_key='synthetic-browser-only-key', app_env='test',
-                          operator_access_token='synthetic-browser-operator-token', operator_username='demo-agent'), NoVoiceGateway())
+app = create_app(Settings('', '', '', '', secret_key='synthetic-browser-only-key', app_env='test'), NoVoiceGateway())
 start_maintenance(app)
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8100, threaded=True, use_reloader=False)
