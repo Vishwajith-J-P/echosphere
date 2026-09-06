@@ -9,6 +9,7 @@ skills-lock.json
 *.key
 *.p12
 *.pfx
+*.zip
 
 # Python
 __pycache__/
