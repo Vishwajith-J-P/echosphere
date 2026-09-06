@@ -2,7 +2,7 @@
 
 ## Status and Database
 
-All entities are **PLANNED**. They describe the approved persistence contract; no migration or database exists yet. SQLite is selected for the prototype behind repository interfaces. UUID strings and UTC ISO-8601 timestamps are used. Production storage is a later architectural decision.
+The logical contract below is approved. Migration 1 is implemented locally in SQLite behind repository/service interfaces; production storage and normalized high-volume transcript tables remain later decisions. UUID strings and UTC timestamps are used.
 
 ## Entity Registry
 
@@ -214,4 +214,4 @@ Prototype defaults use synthetic data only. Exact real-data periods are unresolv
 
 ## Schema Change Log
 
-No schema changes have been implemented. This planned schema was introduced in documentation on 2026-09-03 and requires an initial migration during implementation.
+Migration 1 was implemented on 2026-09-06 for the local prototype. It provides durable session aggregates, append-only audit events, processed-event idempotency, handoff snapshots, integration jobs, local tickets, operator users/sessions, and admission counters. The logical entities above remain the contract; conversation and transcript JSON stay inside the session aggregate until production normalization.

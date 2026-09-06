@@ -4,7 +4,7 @@
 
 **Name:** EchoSphere  
 **Vision:** A calm, real-time multilingual voice assistant for customer assistance, public-information, and non-clinical support lines. It collects only the minimum useful facts, confirms critical details, and hands off to a person whenever automation is unsafe or uncertain.  
-**Status:** Approved prototype scope; implementation has not started.
+**Status:** Approved prototype scope; local implementation is in progress and live Agora acceptance remains open.
 
 ## Problem
 
@@ -48,7 +48,7 @@ When expert judgement is implicated, the AI states its limitation and transfers 
 ### In Scope
 
 - Browser-based support-line simulation using Agora real-time audio and Agora Conversational AI.
-- Hindi and English, including switching within an utterance or turn.
+- Hindi, English, and Tamil, including switching within an utterance or turn.
 - Streaming transcript with speaker and language indicators.
 - Noise-tolerant turn handling, clarification, repetition, and confirmation.
 - Configurable prioritized questions for a generic support case.
@@ -63,7 +63,7 @@ When expert judgement is implicated, the AI states its limitation and transfers 
 - Production PSTN procurement, emergency dispatch, or workforce routing.
 - Medical, legal, financial, or emergency advisory workflows.
 - Caller identity proofing, production identity-provider integration, payments, or sensitive-document upload. Basic protected demo access for the human console remains required.
-- Languages beyond Hindi and English without additional validation.
+- Languages beyond Hindi, English, and Tamil without additional validation.
 - Training foundation speech or language models.
 - Autonomous case resolution or irreversible downstream actions.
 - Production compliance certification or indefinite recordings.
@@ -87,7 +87,7 @@ Domain deployments may change this set but must preserve data minimization, ques
 |---|---|---|
 | FR-001 | Disclose that the assistant is AI and offer human assistance. | Must |
 | FR-002 | Establish live bidirectional audio through Agora Conversational AI. | Must |
-| FR-003 | Understand/respond in Hindi and English with natural code-switching. | Must |
+| FR-003 | Understand/respond in Hindi, English, and Tamil with natural code-switching. | Must |
 | FR-004 | Support barge-in: stop/duck AI speech promptly, preserve caller audio, and resume appropriately. | Must |
 | FR-005 | Collect configured fields in priority order while accepting multiple fields supplied early. | Must |
 | FR-006 | Ask one short question at a time and avoid re-asking confirmed facts. | Must |
@@ -138,7 +138,7 @@ The caller hears that transfer is occurring and should not need to repeat confir
 
 ## Acceptance Criteria
 
-### AC-001 — Hindi/English noisy-call scenario
+### AC-001 — Hindi/English/Tamil noisy-call scenario
 
 Given a caller starts in Hindi, switches to English, supplies incomplete details, and background speech causes a low-confidence segment, the system continues one session, avoids confirming background speech, collects minimum required facts, confirms critical fields, escalates at the repair limit or judgement boundary, supplies a concise handoff packet, and creates/updates one idempotent case (or records retryable failure without blocking transfer).
 
@@ -169,7 +169,7 @@ An explicit request for a person bypasses nonessential questions and starts hand
 ## Assumptions and Open Decisions
 
 - This is generic support intake, not a domain authority.
-- Hindi and English are validation languages.
+- Hindi, English, and Tamil are validation languages.
 - A browser caller simulator and human console are sufficient for the demo.
 - Ticket vendor, production queue provider, retention duration, and final consent copy remain deployment decisions.
 - Confidence thresholds require representative-audio calibration.

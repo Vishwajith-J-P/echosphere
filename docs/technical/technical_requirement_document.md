@@ -105,7 +105,7 @@ Each evaluated caller turn returns:
 - Preserve the caller audio/turn and do not commit text from cancelled AI output as spoken.
 - Ignore or down-rank non-primary/background speech when detectable; ask for repetition instead of guessing.
 - Measure time-to-first-audio, barge-in stop latency, packet loss/jitter where exposed, and repair frequency.
-- Offer text/status fallback in the demo console when media fails, but never represent it as a completed voice interaction.
+- Offer audio connection/recovery status when media fails, but never represent a disconnected call as a completed voice interaction.
 
 ## API Surface (Planned)
 
@@ -155,7 +155,7 @@ Structured events include correlation/session ID, component, event type, latency
 - Unit tests: state machine, question priority, confirmation/correction, confidence rules, safety rules, summaries, redaction, idempotency.
 - Contract tests: Agora gateway and ticket adapters with fixtures/mocks.
 - Integration tests: session-to-handoff and ticket retry flows.
-- Scenario tests: Hindi, English, code-switching, background talk, barge-in, silence, contradictory facts, safety prompts, and explicit human requests.
+- Scenario tests: Hindi, English, Tamil, code-switching, background talk, barge-in, silence, contradictory facts, safety prompts, and explicit human requests.
 - Manual device/network matrix: headphones/speakerphone, poor network, noisy clips, desktop/mobile.
 - Safety regression corpus must assert both prohibited content avoidance and successful escalation.
 
@@ -181,6 +181,6 @@ Environment-specific values include Agora credentials/project identifiers, token
 - Event transport for the console (SSE is preferred for one-way updates; WebSocket if bidirectional realtime commands require it).
 - External ticket vendor and human queue/telephony provider.
 - Production database and job runner.
-- Validated STT/TTS/model combination for Hindi-English code-switching.
+- Validated STT/TTS/model combination for Hindi-English-Tamil code-switching.
 
 See `docs/technical/agora_integration.md`, `docs/technical/api_contract.md`, and `docs/technical/operations.md` for concrete integration, interface, and operating contracts.

@@ -7,7 +7,7 @@ EchoSphere should feel calm, credible, and operational—not playful or anthropo
 ## Voice Interaction Principles
 
 - Disclose AI status at the start and keep a human option available.
-- Use short sentences, one question at a time, plain Hindi/English, and the caller's current language.
+- Use short sentences, one question at a time, plain Hindi/English/Tamil, and the caller's current language.
 - Permit natural code-switching; never force a restart or scold language changes.
 - Yield immediately on barge-in and do not finish an obsolete response.
 - Acknowledge emotion without diagnosing it: “I’m sorry this is difficult” is acceptable; clinical conclusions are not.

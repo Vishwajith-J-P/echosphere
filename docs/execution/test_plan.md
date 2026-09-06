@@ -6,6 +6,8 @@ Tests prove deterministic policy independently of Agora and separately validate 
 
 No feature becomes COMPLETE until its mapped automated checks pass and required Agora/manual evidence is recorded.
 
+Local evidence (2026-09-06): backend voice-session/domain tests, frontend Vitest tests, TypeScript typecheck, and production Vite build pass. Playwright verifies the voice-only caller surface and responsive layout against the local fixture. These checks do not substitute for live Agora sandbox audio evidence.
+
 ## Test Layers
 
 | Layer | Scope |
@@ -14,7 +16,7 @@ No feature becomes COMPLETE until its mapped automated checks pass and required 
 | Property/state model | No invalid transition; no confirmed fact without confirmation; no collection after escalation; max repair limit |
 | Contract | Agora gateway/event fixtures, ticket/handoff adapters, API schemas and idempotency |
 | Integration | Flask + SQLite transaction flows, callback dedup/order, handoff snapshot, retry processing |
-| End-to-end sandbox | Browser microphone/RTC, agent start/stop, transcript, Hindi/English, interruption, human join |
+| End-to-end sandbox | Browser microphone/RTC, agent start/stop, transcript, Hindi/English/Tamil, interruption, human join |
 | Accessibility | Keyboard, focus, screen-reader semantics, contrast, language tags, reduced motion |
 | Security | authorization boundaries, token scope/expiry, CSRF/CORS, rate limits, injection, callback validation, log leakage |
 | Load/resilience | concurrent sessions within account limits, provider timeouts, reconnect, duplicate/out-of-order events, backlog recovery |
@@ -31,6 +33,8 @@ No feature becomes COMPLETE until its mapped automated checks pass and required 
 8. Missing confidence is Unknown, never High.
 9. Finalized transcript sequence is stable; duplicate vendor events do not create duplicate turns.
 10. Secrets, raw tokens, and unmasked sensitive details do not enter standard logs.
+11. A completed intake returns a concrete next action (follow-up case queued, focused question, or human request); it must not only echo the caller's claim.
+12. FAQ answers come only from the approved local catalogue; unknown questions produce a limitation and are recorded without guessing.
 
 ## Acceptance Scenarios
 
@@ -64,6 +68,15 @@ Attempt cross-session caller reads, caller console access, agent supervisor acti
 
 ## Evaluation Dataset
 
+### Research-derived regressions
+
+- TS-001: Hindi spoken digits and mixed-script callbacks; no inferred country code or omitted digits; background affirmation cannot confirm a caller field. Compare quiet and noisy versions of identical synthetic utterances.
+- TS-002: interrupt a pending response and deliver its late result; obsolete speech stays suppressed and confirmed case fields survive.
+- TS-005: prove the actual response-control interface rejects prohibited output before TTS, including control timeout/failure. A safe transcript generated after unsafe audio was played fails this gate.
+- TS-006: race two agents accepting the same snapshot; only one receives an assignment. Fail human media join after acceptance and verify no false connected state. Lose a successful remote ticket-create response and verify reconciliation/retry produces one ticket.
+
+Reference: [Voice gap resolution](../technical/gap_resolution.md). These are planned checks, not recorded results.
+
 Maintain versioned synthetic audio/text fixtures with:
 
 - Hindi, English, and intra-/inter-turn code-switching;
@@ -90,6 +103,8 @@ Do not use real caller recordings without explicit approved governance.
 Language/ASR quality thresholds are established after Phase 0 baseline. Report sample size and conditions; do not claim universal accuracy.
 
 ## Evidence
+
+For the [limitation remediation gates](implementation_plan.md#limitation-remediation-plan), TS-006 must also restart the backend after committing confirmed fields, a handoff snapshot, and a pending ticket job. Assert those records survive, the retry retains its identity, and media status is reconciled rather than assumed connected. Reconnect and failed-human-join tests must distinguish a recovered UI from an actual working audio connection. The final gate includes TS-007 and accessibility review; an empty test suite or build success alone is not acceptance evidence.
 
 Each completed feature records test command, commit/build identifier, environment, policy/model/provider versions, pass/fail counts, latency summary where relevant, and links/paths to redacted artifacts. Manual observation alone cannot complete deterministic domain features.
 

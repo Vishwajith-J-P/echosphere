@@ -3,6 +3,8 @@
 .env.*
 !.env.example
 .agora/
+.agents/
+skills-lock.json
 *.pem
 *.key
 *.p12
@@ -20,7 +22,12 @@ venv/
 # Node and frontend build output
 node_modules/
 dist/
+*.tsbuildinfo
 coverage/
+test-results/
+playwright-report/
+.tmp/
+pytest-temp/
 .coverage
 
 # Local runtime data

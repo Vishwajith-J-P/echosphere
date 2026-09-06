@@ -31,7 +31,7 @@ Routes are planned and not implemented.
 1. Caller opens the simulator, grants microphone access, and starts.
 2. System establishes Agora media and introduces itself as an AI.
 3. AI states it can transfer to a person and asks an open intent question.
-4. Caller may answer in Hindi, English, or both.
+4. Caller may answer in Hindi, English, Tamil, or code-switch among them.
 5. System extracts supplied fields as tentative, selects the highest-priority missing field, and asks one short question.
 6. Critical facts are read back in the caller's current language.
 7. Caller confirms or corrects them. Corrections are reconfirmed.
@@ -56,8 +56,9 @@ Triggers include explicit human request, safety boundary, unresolved contradicti
 4. Start ticket sync independently.
 5. Offer the transfer to the appropriate human queue. In the browser prototype this means an authorized human joins the existing Agora channel; external/PSTN transfer requires a future adapter.
 6. Agent reviews context and accepts.
-7. Connect human and caller; mark the AI as no longer authoritative in the dialogue.
-8. If transfer fails, retain context and use the configured manual fallback. Ticket failure never blocks the transfer.
+7. The authorized agent uses the same website's operator workspace to join the existing Agora channel with a scoped human token; the AI agent is stopped before the caller is told the human is connected.
+8. Connect human and caller; mark the AI as no longer authoritative in the dialogue.
+9. If transfer fails, retain context and use the configured manual fallback. Ticket failure never blocks the transfer.
 
 ## FLOW-004 — Safety Boundary
 

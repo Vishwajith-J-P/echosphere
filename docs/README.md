@@ -8,18 +8,20 @@ This directory is the canonical documentation set for EchoSphere. It separates p
 
 - **Project phase:** Phase 0 vendor spike in progress
 - **Application code:** The secure session/token slice and basic React caller RTC surface exist; the feature registry is authoritative for details
-- **Feature status:** F-001 is IN_PROGRESS; all other product features remain PLANNED
+- **Feature status:** voice-only caller, persistence, operator console, ticket adapter, and browser workflows are implemented; live Agora speech/handoff evidence remains IN_PROGRESS.
 - **Agora account:** Authenticated through Agora CLI 0.2.8
 - **Agora project:** `echosphere`, global region
 - **Enabled capabilities:** RTC included, Signaling enabled, Conversational AI enabled
 - **Known readiness warning:** Agora CLI reports token capability disabled; this is non-blocking for the initial spike but must be resolved before production-style access is accepted
 - **Data policy:** Synthetic demo data only; recording disabled
 
-The current slice is not evidence of a complete live voice product. Live Hindi-English speech, code-switching, transcript events, interruption latency, and browser-channel human handoff still require Agora sandbox validation.
+The current slice is not evidence of a complete live voice product. Live Hindi-English-Tamil speech, code-switching, transcript events, interruption latency, and browser-channel human handoff still require Agora sandbox validation.
 
 Never add credentials, tokens, certificates, caller data, or generated secret values to documentation.
 
 ## Start Here
+
+Latest code-grounded assessment: [Current limitations and design review](execution/design_review.md), including prioritized design mitigations and corrections to earlier setup claims.
 
 1. `project_blueprint.md` — concise complete system overview.
 2. `product/project_requirement_document.md` — approved behavior and acceptance criteria.
@@ -29,6 +31,10 @@ Never add credentials, tokens, certificates, caller data, or generated secret va
 6. `execution/features.md` — authoritative implementation status.
 
 7. `execution/ai_harness_contract.md` — mandatory build rules and completion gates for an implementation agent.
+
+8. `technical/development_setup.md` — exact setup, environment variables, commands, and smoke checks.
+9. `technical/faq_knowledge.md` — approved local FAQ boundary and unknown-answer behavior.
+10. `technical/gap_resolution.md` — researched source candidates, audio/language/control contracts, and remaining live gates.
 
 ## Directory Structure
 
@@ -68,12 +74,15 @@ docs/
 | Technical invariants and stack | `technical/technical_requirement_document.md` |
 | Modules and runtime relationships | `technical/architecture.md` |
 | Agora lifecycle and boundaries | `technical/agora_integration.md` |
+| Concrete setup and local runbook | `technical/development_setup.md` |
+| Voice gap closure and reusable source candidates | `technical/gap_resolution.md` |
 | HTTP and internal events | `technical/api_contract.md` |
 | Persistent data | `technical/backend_schema.md` |
 | Configuration, deployment, incidents | `technical/operations.md` |
 | What currently exists | `execution/features.md` |
 | AI implementation rules and gates | `execution/ai_harness_contract.md` |
 | Work sequence | `execution/implementation_plan.md` |
+| Limitation fixes, dependencies, and acceptance gates | [Remediation plan](execution/implementation_plan.md#limitation-remediation-plan) |
 | Verification | `execution/test_plan.md` |
 | Requirement coverage | `execution/traceability.md` |
 | Intentional compromises | `execution/tech_debt.md` |

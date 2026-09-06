@@ -2,7 +2,7 @@
 
 ## Status
 
-Approved target architecture for the prototype. Phase 0 contains a partial implementation of the session/token path, Agora gateway, and caller RTC surface; the feature registry is the only authority for implementation status. This document must not be read as evidence that every component below exists.
+Approved target architecture for the prototype. The local implementation now covers the session/token path, SQLite persistence, deterministic intake, browser caller, operator console, controlled Agora gateway, and local ticket adapter; live provider behavior remains partial. The feature registry is the authority for implementation status. This document must not be read as evidence that every production component below exists.
 
 ## System Context
 

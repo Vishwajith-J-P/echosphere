@@ -2,7 +2,34 @@
 
 ## Status
 
-Documentation is complete and Phase 0 implementation is in progress.
+The documentation baseline is established and the local implementation slice is in place. Vendor feasibility and live acceptance evidence remain open; written plans do not close these gates.
+
+## Limitation Remediation Plan
+
+These fixes implement existing scope. All gates below are pending until evidence is recorded in the feature registry and test plan. See [technical gap resolution](../technical/gap_resolution.md) for provider references and integration details.
+
+| Order | Limitation and fix | Existing tasks / features | Acceptance gate |
+|---|---|---|---|
+| 1 | Unverified live voice: prove Agora-managed STT, LLM, and TTS with the configured account; resolve SDK, model, voice, authentication, and event compatibility | IP-001–IP-004; F-001 | Actual two-way audio and repeatable start/stop; record pinned versions, redacted configuration, provider event fixtures, account usage and errors. Mock tests alone cannot pass |
+| 2 | Missing conversation control: implement prioritized questions, tentative extraction, explicit version-bound confirmation, correction history, bounded repairs, and policy before speech | IP-011–IP-014; F-004–F-006, F-010 | TS-003/004/005 and core invariants pass; human request or safety rule prevents another intake question; prohibited model output cannot reach TTS, including on control failure |
+| 3 | Unverified noisy multilingual interaction: measure existing audio processing, Hindi-English switching and interruption; evaluate an optional denoiser only after measured baseline failures | IP-020–IP-024; F-001–F-003 | TS-001/002 pass on quiet/noisy paired fixtures; verify critical digit read-back, caller turn preservation and stale response cancellation; report latency against existing targets |
+| 4 | Missing human continuation: implement a protected console, immutable handoff context, atomic acceptance, scoped human join and verified media readiness | IP-030–IP-032 and minimum IP-040 access controls; F-007, F-009 | A second authorized browser continues the same call; context precedes acceptance; no false connected state on failed join; competing agents cannot both claim the call; AI stops/suppresses correctly |
+| 5 | Volatile cases and unreliable integrations: finish durable SQLite repositories, migrations, local ticket adapter, persistent retry jobs and external-outcome reconciliation | IP-011, IP-013, IP-033/034; F-008, F-010 | Restart preserves case facts, snapshot and pending jobs; TS-006 loses a remote success response without creating a duplicate ticket; ticket failure never blocks transfer |
+| 6 | Incomplete operational readiness: finish role checks, redaction, retention, reconnect recovery, observability, accessibility and full safety evaluation | IP-040–IP-045; F-001, F-009, F-010 and all-feature regression | TS-001–TS-007 plus accessibility/security checks pass; log review finds no secrets; recovery and safe fallback are demonstrated; evidence records test conditions and remaining failures |
+
+### Dependency rules
+
+- The order is an integration sequence, not permission to defer prerequisites. SQLite foundation belongs in Phase 1 before durable confirmation/handoff; step 5 completes ticket persistence and restart recovery.
+- Agent authorization must exist before admitting a human into a caller channel. Phase 4 reviews and hardens it; it is not first added after a public console demo.
+- Prove response control before declaring live conversational safety. An unconstrained managed-model connectivity spike remains synthetic and does not complete F-006.
+- Independent domain and adapter tests can proceed while vendor evidence is pending. An unavailable provider blocks only the work that depends on it; preserve the existing phase ownership above.
+- Each gate records test command/build, policy and provider versions, environment, results, and redacted artifacts using the test plan's evidence format. Record intentional implementation compromises in the debt register; do not mark a research candidate as installed.
+
+### Limits that remain by design
+
+Background-speaker overlap, unclear audio, and ambiguous facts require clarification or human help even with filtering. Report measured performance rather than perfect recognition claims. A human may be unavailable; keep context and use only a configured fallback without promising a connection. Internet/provider outages require bounded recovery and honest failure states.
+
+Medical diagnosis, authoritative legal/financial/emergency advice, payments, and autonomous consequential decisions remain excluded. PSTN integration and production deployment require a separate scope decision after the browser prototype passes its gates; they are not remediation tasks in this plan.
 
 ## Completed Preparation
 
@@ -101,6 +128,8 @@ Documentation is complete and Phase 0 implementation is in progress.
 - Do not expand into production emergency response, expert advice, identity proofing, payments, or autonomous resolution.
 
 ## Current Work
+
+Research prerequisite: apply [Voice gap resolution](../technical/gap_resolution.md) before continuing the vendor spike. Resolve the installed-versus-upstream model identifier/authentication differences, transcript dependency matrix, and pre-speech policy-control feasibility with redacted evidence. Reuse official starter patterns within the existing architecture; do not scaffold over the working tree.
 
 **Active task:** IP-001 — Agora vendor spike
 **Next recommended task:** Run the browser/agent path in the Agora sandbox, then validate IP-004 transcript transport.

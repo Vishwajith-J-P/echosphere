@@ -2,14 +2,14 @@
 
 ## Status
 
-Phase 0 application code exists. Only evidence-backed portions of F-001 are checked; all other features remain planned.
+The local implementation slice is present across the voice-only backend, browser caller, operator console, durable SQLite store, and mock ticket adapter. A feature remains `IN_PROGRESS` where live Agora evidence or production hardening is still required.
 
 Platform/account configuration and documentation readiness are tracked in the implementation plan, not marked as completed product features.
 
 | ID | Feature | Status | Summary |
 |---|---|---|---|
 | F-001 | Agora voice session | IN_PROGRESS | Secure realtime caller/AI audio foundation |
-| F-002 | Multilingual conversation | PLANNED | Hindi, English, and code-switching |
+| F-002 | Multilingual conversation | IN_PROGRESS | Hindi, English, Tamil, and code-switching |
 | F-003 | Interruption/noise handling | PLANNED | Barge-in and focused repair |
 | F-004 | Guided information collection | PLANNED | Prioritized fields and validation |
 | F-005 | Confirmation/correction | PLANNED | Tentative-to-confirmed lifecycle |
@@ -140,6 +140,10 @@ Platform/account configuration and documentation readiness are tracked in the im
 **Acceptance:** PRD FR-014 and non-functional requirements.
 
 ## Verification Baseline
+
+The [limitation remediation plan](implementation_plan.md#limitation-remediation-plan) defines the six delivery gates for these features. Documenting a fix does not change its implementation status or check its acceptance boxes.
+
+Research update (2026-09-05): [Voice gap resolution](../technical/gap_resolution.md) maps official starters and optional RNNoise/Silero references to remaining features. No dependency was installed and no feature status advanced. Managed voice availability, trusted events, policy-before-speech control, and human media continuity still require evidence.
 
 No capability may be checked or marked COMPLETE until its automated tests pass and relevant live/manual validation is recorded. Agora-dependent behavior requires a sandbox integration test in addition to mocked contracts.
 

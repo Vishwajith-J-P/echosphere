@@ -1,10 +1,10 @@
 # EchoSphere
 
-EchoSphere is a real-time Hindi-English voice AI prototype for customer assistance, public information, and non-clinical support intake. It uses Agora Conversational AI in the live voice path, collects the minimum useful facts, confirms critical details, and transfers to a human whenever confidence or policy requires human judgement.
+EchoSphere is a real-time Hindi-English-Tamil voice AI prototype for customer assistance, public information, and non-clinical support intake. It uses Agora Conversational AI in the live voice path, collects the minimum useful facts, confirms critical details, and transfers to a human whenever confidence or policy requires human judgement.
 
 ## Current Status
 
-Phase 0 is in progress. A Flask API now issues scoped Agora session credentials and controls a Conversational AI agent through a provider gateway; a React caller page joins Agora RTC, publishes noise-processed microphone audio, plays the remote agent, and ends the session. Automated API tests and the production web build pass. Live sandbox speech, transcripts, code-switching, barge-in, and handoff are not yet verified.
+Phase 0 is in progress. A Flask API now provides durable local sessions, deterministic intake, protected operator handoff, and a controlled Agora Conversational AI gateway; a React caller page supports text fallback, Hindi/English/Tamil language selection, RTC microphone processing, transcript/fact views, and a console. Targeted backend tests, frontend tests, typecheck, build, and local Playwright workflows pass. Live sandbox speech, provider transcripts, code-switching, barge-in, and real Agora handoff are not yet verified.
 
 ## Documentation Map
 
@@ -19,8 +19,9 @@ Phase 0 is in progress. A Flask API now issues scoped Agora session credentials 
 | `docs/technical/technical_requirement_document.md` | Technical constraints and invariants |
 | `docs/technical/architecture.md` | Components, trust boundaries, runtime ownership |
 | `docs/technical/agora_integration.md` | Agora responsibilities and lifecycle |
+| `docs/technical/development_setup.md` | Exact setup, environment variables, commands, and smoke checks |
 | `docs/technical/api_contract.md` | Planned internal HTTP/event contracts |
-| `docs/technical/backend_schema.md` | Planned persistent entities and constraints |
+| `docs/technical/backend_schema.md` | Persistent entities, migration 1, and constraints |
 | `docs/technical/operations.md` | Configuration, deployment, monitoring, incident behavior |
 | `docs/execution/features.md` | Actual feature implementation status |
 | `docs/execution/ai_harness_contract.md` | Mandatory implementation-agent rules and completion gates |
@@ -50,7 +51,7 @@ cd frontend
 npm run dev
 ```
 
-Open the Vite URL, permit microphone access, and start a session. Copy `.env.example` to `.env` and provide server-side Agora credentials first. Never commit `.env`. Remaining Phase 0 work is live sandbox validation of speech configuration, transcripts/events, interruption, and browser-channel human handoff.
+Open the Vite URL, permit microphone access, and choose **Start voice assistance**. Speech enters through the browser microphone and the Agora agent returns speech; there is no caller text intake or text response path. When the caller requests a human, an authenticated supervisor/agent can accept the call from `/console` in the same website and join the existing Agora channel. Copy `.env.example` to `.env`; live voice requires Agora credentials and an HTTPS `PUBLIC_BASE_URL`. Set `SPEECH_PROVIDER=sarvam` with a Sarvam key for the Hindi/Tamil STT/TTS path, or use the Deepgram/MiniMax managed path. Never commit `.env`. The assistant records a follow-up case and asks the next focused question; it does not claim to resolve an issue without an approved knowledge/action system.
 
 ## Safety
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Partially implemented and vendor-validated as of 2026-09-03. Agora CLI 0.2.8 is installed/authenticated; RTC, Signaling, Real-Time Speech-to-Text, and Conversational AI are enabled. The server uses `agora-agents` 2.7.2 and the browser uses `agora-rtc-sdk-ng` 4.24.3. Secure token creation and mocked lifecycle tests pass; live Hindi-English model/voice behavior remains unverified.
+Partially implemented and vendor-validated as of 2026-09-06. Voice is the primary caller path: the browser publishes microphone audio, Agora Conversational AI performs speech recognition/response synthesis, and the browser subscribes to the agent audio. The server uses `agora-agents` 2.7.2 and the browser uses `agora-rtc-sdk-ng` 4.24.3. Secure token creation, durable local lifecycle tests, and a controlled CustomLLM endpoint pass locally; live Hindi-English-Tamil model/voice behavior remains unverified.
 
 ## Role in EchoSphere
 
@@ -30,17 +30,19 @@ Never log secrets or full tokens. Token TTL must cover expected call duration pl
 
 ## Provisioning and Baseline
 
+The researched implementation path, repository candidates, model-identifier compatibility warning, and live gates are in [Voice gap resolution](gap_resolution.md). This is the required companion for IP-003/IP-004 and IP-023/IP-024. Candidate source code is not evidence of working product behavior.
+
 The initial gateway configures managed Deepgram STT (`nova-3`, multilingual), OpenAI (`gpt-4o-mini`), and MiniMax TTS (`speech-2.6-turbo`) identifiers to reduce credential variables. These exact identifiers and the selected voice are implementation hypotheses until a live agent starts successfully.
 
 The tested combination of `agora-rtm` 2.2.3 and `agora-agent-client-toolkit` 1.2.0 has incompatible RTC peer constraints, so neither is installed in the Phase 0 browser baseline. IP-004 must select a compatible, officially supported version matrix before transcript/event code is added.
 
 Use Agora Console/CLI to select a project with RTC and Conversational AI enabled and run `agora project doctor --feature convoai`. The official Python agent SDK is currently installed as `agora-agents`; pin the verified version in project dependencies rather than relying on an unbounded latest release.
 
-Start Phase 0 with Agora-managed model credentials to reduce variables. Select the production-like ASR/TTS only after testing Hindi, English, mixed utterances, digits/names, noise, and latency. “Multilingual” provider marketing is not acceptance evidence.
+Start Phase 0 with Agora-managed model credentials to reduce variables. For the Indian-language path, `SPEECH_PROVIDER=sarvam` selects Sarvam STT (`saaras:v3`) and Sarvam TTS (`priya`) through the Agora agent; the default Deepgram/MiniMax path remains available. Select the production-like ASR/TTS only after testing Hindi, English, Tamil, mixed utterances, digits/names, noise, and latency. “Multilingual” provider marketing is not acceptance evidence.
 
 ## Session Lifecycle
 
-1. Backend allocates collision-resistant channel name and distinct numeric or string UIDs compatible with the selected mode.
+1. Backend allocates collision-resistant channel name and distinct numeric or string UIDs for the voice channel.
 2. Backend creates the local session/case transactionally.
 3. Backend returns caller App ID/channel/UID/token plus an EchoSphere caller capability; it never returns REST credentials or App Certificate.
 4. Browser joins RTC and publishes microphone audio.
@@ -101,10 +103,10 @@ Do not claim webhook signatures, delivery order, confidence scores, or audio-qua
 Prototype handoff:
 
 1. EchoSphere commits the context snapshot.
-2. Authorized human joins the existing RTC channel using a server-issued agent token.
-3. Console confirms context delivery and the human accepts.
-4. EchoSphere stops the AI agent.
-5. Caller and human remain in the RTC channel.
+2. Authorized human reviews the snapshot and atomically accepts its version.
+3. Backend issues agent join data; human joins the existing RTC channel and media readiness is verified.
+4. EchoSphere stops/reconciles the AI agent; ordinary AI collection remains suppressed throughout escalation.
+5. Mark human connected after media readiness and AI shutdown/suppression are observed. Caller and human remain in the RTC channel. Acceptance alone is not proof of connection.
 
 This is an EchoSphere composition of Agora RTC participation and agent lifecycle, not a claim of native PSTN/contact-center transfer. External telephony requires a dedicated, separately validated adapter.
 

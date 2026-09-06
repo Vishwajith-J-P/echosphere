@@ -94,6 +94,20 @@
 
 ## Proposed Decisions
 
+## D-010 — Three-language implementation and controlled speech (2026-09-06)
+
+ACCEPTED under the user's instruction to build the entire documented prototype with Hindi, English, and Tamil. This expands the previous two-language scope; production and professional advice remain excluded.
+
+Use Agora's documented CustomLLM interface to call a session-bound authenticated Flask endpoint. It returns only deterministic permitted intake/confirmation/transfer directives, never arbitrary generated advice. Agora provider transcripts are stored at that trusted endpoint; generated assistant content is labeled delivery unknown, not proof of playback. Browser status uses authenticated SSE snapshots, while the caller's only interaction channel is Agora audio.
+
+SQLite's standard-library driver and explicit versioned migrations are accepted for the single-process prototype. Durable conversation aggregates, field history, audit events, operator sessions, and ticket jobs replace process-local storage. SSE is accepted. Demo operators use local password-hashed accounts and expiring opaque bearer credentials held only in memory by the browser.
+
+Default generic intake requires intent and issue_details; contact and location are optional unless deployment policy explicitly enables them. Intake completion leaves the support case open for human follow-up. Required-field refusal escalates; optional refusal skips. Two focused failed repairs escalate. The caller surface is voice-only; Agora speech is the sole input/output channel.
+
+The FAQ catalogue is local and document-backed. Unknown questions are explicitly not guessed; they are noted in the voice transcript and receive a spoken limitation until a reviewed knowledge source and human-escalation workflow are enabled.
+
+Sources: https://recipes.agora.io/recipes/custom-llm ; https://flask.palletsprojects.com/en/stable/patterns/streaming/ ; https://docs.python.org/3.13/library/sqlite3.html . Installed SDK CustomLLM and speech-provider signatures are verified locally. Speech model and event behavior still require live evidence.
+
 The following must be resolved with official vendor capability validation or deployment stakeholders before the affected production work:
 
 - Exact Agora Conversational AI integration mode, STT/TTS/model configuration, and supported transfer bridge.
