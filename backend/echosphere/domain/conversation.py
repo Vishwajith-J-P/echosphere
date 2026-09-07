@@ -179,7 +179,8 @@ class Conversation:
         return cls.copy(call, 'repair', field=cls.copy(call, key))
 
     @classmethod
-    def turn(cls, call: dict, text: str, *, speech_confirmation: bool = False) -> str:
+    def turn(cls, call: dict, text: str, *, speech_confirmation: bool = False,
+             assume_understood: bool = False) -> str:
         if call['status'] in TERMINAL:
             return cls.copy(call, 'ended')
         language = language_of(text, call['language'])
@@ -217,7 +218,12 @@ class Conversation:
             for field, value in reversed(supplied):
                 cls.correct(call, field.lower(), value)
             return cls.prompt(call)
-        return cls.correct(call, key, text)
+        reply = cls.correct(call, key, text)
+        if assume_understood and key in {'intent', 'issue_details'} and call['challenge']:
+            # Voice transcription is already the caller's first statement. Do
+            # not force a caller to repeat an issue just to confirm recognition.
+            reply = cls.confirm(call, call['challenge']['id'])
+        return reply
 
     @staticmethod
     def snapshot(call: dict) -> dict:

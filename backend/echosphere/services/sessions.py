@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
+import logging
 import secrets
 import time
 from uuid import uuid4
@@ -11,6 +12,8 @@ from ..domain.conversation import Conversation, HANDOFF, TERMINAL
 from ..domain.faq import is_question, limitation, lookup as lookup_faq
 from ..errors import ApiError
 from ..storage import Database
+
+logger = logging.getLogger(__name__)
 def digest(value: str) -> str:
     return hashlib.sha256(value.encode()).hexdigest()
 
@@ -84,6 +87,7 @@ class SessionService:
             started = self._gateway.start(session_id=session_id, channel=state['channel'], caller_uid=state['caller_uid'],
                 agent_uid=state['agent_uid'], requested_language=state['requested_language'], control_token=self.control_token(session_id))
         except Exception as exc:
+            logger.exception('Agora provider start failed for session %s: %s', session_id, type(exc).__name__)
             with self.database.transaction() as connection:
                 _, state = Database.load(connection, session_id)
                 state['provider_status'] = 'unknown'
@@ -175,12 +179,22 @@ class SessionService:
                         raise ApiError('RATE_LIMITED', 'The turn limit was reached. Request a person or end the call.', 429)
                     self._append(state, 'human' if operator and call['status'] == 'human_connected' else 'caller', payload['text'])
                     before = json.loads(json.dumps(call))
-                    reply = '' if operator and call['status'] in HANDOFF else ('' if call['status'] == 'human_connected' else Conversation.turn(call, payload['text'], speech_confirmation=provider and payload.get('confirmation_context', False)))
+                    reply = '' if operator and call['status'] in HANDOFF else ('' if call['status'] == 'human_connected' else Conversation.turn(call, payload['text'], speech_confirmation=provider and payload.get('confirmation_context', False), assume_understood=provider))
+                    proposal = payload.get('llm_proposal')
+                    if provider and isinstance(proposal, dict) and call['status'] not in HANDOFF | TERMINAL and proposal.get('wants_human') is True:
+                        reply = Conversation.escalate(call, 'llm_handoff_request')
                     faq = lookup_faq(payload['text'], call['language']) if provider else None
-                    if provider and not before['fields'] and not before['challenge'] and call['escalation'] is None and (faq or is_question(payload['text'])):
-                        call = before
-                        state['conversation'] = call
-                        reply = (faq or limitation(call['language'])) + ' ' + Conversation.prompt(call)
+                    if provider and not before['challenge'] and call['escalation'] is None and (faq or is_question(payload['text'])):
+                        proposed_answer = proposal.get('answer') if isinstance(proposal, dict) else None
+                        answer = proposed_answer if proposed_answer and payload.get('approved_answer') else (faq or limitation(call['language']))
+                        # Answer the caller's question first. The next caller turn
+                        # continues the existing tentative intake state; do not
+                        # make the voice agent repeat the caller's words as a prompt.
+                        reply = answer
+                    elif provider and isinstance(proposal, dict) and proposal.get('answer') and payload.get('approved_answer') and call['status'] not in HANDOFF | TERMINAL:
+                        # The local model may phrase retrieved knowledge, but the
+                        # deterministic state machine still owns collection and policy.
+                        reply = proposal['answer'] + (' ' + Conversation.prompt(call) if call['challenge'] else '')
                 elif action == 'confirm':
                     reply = Conversation.confirm(call, payload['challenge_id'])
                 elif action == 'correct':

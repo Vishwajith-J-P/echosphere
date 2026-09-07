@@ -249,11 +249,24 @@ def controlled_llm(session_id):
     if not callers or not 1 <= len(callers[-1]['content']) <= 600:
         raise ApiError('VALIDATION_ERROR', 'A caller utterance is required.', 400)
     from ..domain.conversation import Conversation
+    from ..domain.faq import lookup as lookup_faq
+    from ..services.llama_cpp import needs_interpretation
     assistants = [item['content'] for item in messages if item.get('role') == 'assistant']
     expected = Conversation.prompt(json.loads(json.dumps(state['conversation'])))
     event_id = 'provider:' + hashlib.sha256(json.dumps(messages, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    proposal = None
+    local_llm = current_app.extensions.get('llama_cpp')
+    approved_answer = lookup_faq(callers[-1]['content'], state['conversation']['language'])
+    if local_llm is not None and needs_interpretation(callers[-1]['content'], approved_answer or ''):
+        proposal = local_llm.answer(
+            language=state['conversation']['language'],
+            utterance=callers[-1]['content'],
+            retrieved_answer=approved_answer or '',
+            history=messages,
+        )
     result = sessions.command(session_id, '', 'turn', {'text': callers[-1]['content'], 'event_id': event_id,
-        'confirmation_context': bool(assistants and assistants[-1] == expected)}, operator={'username': 'provider'}, provider=True)
+        'confirmation_context': bool(assistants and assistants[-1] == expected),
+        'llm_proposal': proposal, 'approved_answer': approved_answer}, operator={'username': 'provider'}, provider=True)
     response_id = 'chatcmpl-' + event_id[-24:]
     # The whole bounded response is authorized before yielding any text to TTS.
     def output():

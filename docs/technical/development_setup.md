@@ -65,6 +65,9 @@ Copy `.env.example` to the location loaded by the Flask process. Values below ar
 | `PUBLIC_BASE_URL` | Voice only | Public HTTPS URL used by Agora CustomLLM to call the controlled API |
 | `SPEECH_PROVIDER` | No | `deepgram` fallback or `sarvam` for Sarvam STT/TTS |
 | `SARVAM_API_KEY` | Sarvam only | Server-side provider credential; never expose it to the browser |
+| `LLAMA_CPP_URL` | No | Loopback URL for a local llama.cpp `llama-server`; blank disables local generation |
+| `LLAMA_CPP_MODEL` | No | Model identifier reported to llama.cpp, default `qwen1.5-1.8b-chat` |
+| `LLAMA_CPP_TIMEOUT_SECONDS` | No | Bounded local inference timeout, between 1 and 30 seconds |
 
 The browser may receive only the App ID, channel, UID, short-lived RTC token, expiry, and opaque caller capability. It must never receive the App Certificate, customer credentials, ticket credentials, or server signing key.
 
@@ -80,7 +83,15 @@ The Customer ID/Secret authenticate Agora REST API calls; they are separate from
 
 ## Local Commands
 
-From the repository root, use two terminals.
+From the repository root, use three terminals. Start llama.cpp first, then Flask, then the frontend. Start only one Flask process on port `8000`.
+
+Qwen/llama.cpp:
+
+```powershell
+& "D:\dev_env\llama-b9873-bin-win-vulkan-x64\llama-server.exe" `
+  -m "D:\models\weights\qwen3-1.7b-q4_k_m.gguf" `
+  --host 127.0.0.1 --port 8080 --ctx-size 4096
+```
 
 Backend:
 
@@ -88,6 +99,8 @@ Backend:
 conda activate echosphere
 cd backend
 python -m pip install -r requirements.txt
+$env:LLAMA_CPP_URL="http://127.0.0.1:8080"
+$env:LLAMA_CPP_MODEL="qwen3-1.7b-q4_k_m.gguf"
 python run.py
 ```
 
@@ -99,9 +112,23 @@ npm ci
 npm run dev
 ```
 
+Open `http://localhost:3000`. Check `http://127.0.0.1:8000/health/ready` for backend readiness and `http://127.0.0.1:8080/health` for llama.cpp readiness. If voice startup fails, inspect the Flask terminal for the underlying provider error; the browser message is intentionally generic.
+
 The caller is voice-only. It requires the Agora values, `PUBLIC_BASE_URL`, and the selected provider credentials; there is no local text-only mode.
 
+### Local Qwen inference
+
+Download a compatible Qwen 1.5/1.8B GGUF model separately, then run llama.cpp's HTTP server on loopback:
+
+```powershell
+llama-server.exe -m .\models\qwen1_5-1_8b-chat-q4_k_m.gguf --host 127.0.0.1 --port 8080 --ctx-size 4096
+```
+
+Set `LLAMA_CPP_URL=http://127.0.0.1:8080` in `.env`. The backend sends only the current utterance, bounded recent context, and a matching approved FAQ answer. If the server is unavailable or returns malformed output, the deterministic orchestrator's safe response is used. Qwen output is never allowed to confirm facts, invent an answer, or suppress escalation.
+
 The browser caller is served by Vite. The backend URL and allowed origin must match the local configuration used by the current frontend. Never expose the Flask development server or an Agora secret endpoint publicly.
+
+The local Agora gateway uses direct HTTPS for its server-side control request. If a machine-wide `HTTP_PROXY`/`HTTPS_PROXY` is set, it is intentionally not inherited by the Agora SDK because a dead proxy causes `WinError 10061` during agent start.
 
 ## Required Verification Commands
 

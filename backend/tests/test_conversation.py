@@ -80,3 +80,11 @@ def test_documented_faq_answers_only_known_questions():
     assert 'முப்பது' in lookup('இணைய இணைப்பு வேலை செய்யவில்லை', 'ta-IN')
     assert lookup('What is the price of my electricity plan?', 'en-IN') is None
     assert is_question('What is the price of my internet plan?')
+
+
+def test_voice_first_pass_accepts_issue_and_does_not_repeat_it():
+    call = Conversation.new('en-IN')
+    reply = Conversation.turn(call, 'My internet is not working', assume_understood=True)
+    assert call['fields']['intent']['state'] == 'confirmed'
+    assert 'You said' not in reply
+    assert 'what happened' in reply.lower()

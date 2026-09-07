@@ -16,8 +16,23 @@ Platform/account configuration and documentation readiness are tracked in the im
 | F-006 | Confidence and safety policy | PLANNED | Explainable escalation decisions |
 | F-007 | Human handoff | PLANNED | Warm transfer with context |
 | F-008 | Ticket integration | PLANNED | Idempotent case sync and retry |
-| F-009 | Agent/supervisor console | IN_PROGRESS | Live queue, caller context, audio controls, optional text fallback, and queue cleanup |
+| F-009 | Agent/supervisor console | IN_PROGRESS | Live queue, caller context, audio controls, customer transcript, optional text fallback, and queue cleanup |
 | F-010 | Audit, privacy, observability | PLANNED | Safe operational evidence |
+| F-011 | Local Qwen RAG answer interpreter | IN_PROGRESS | llama.cpp-backed interpretation of approved FAQ answers with guarded handoff proposals |
+
+## F-011 — Local Qwen RAG Answer Interpreter
+
+**Status:** IN_PROGRESS
+
+- [x] Flask calls an optional loopback llama.cpp OpenAI-compatible endpoint with bounded timeout and output validation.
+- [x] Only the approved local FAQ answer is supplied as model knowledge; unavailable or malformed model output falls back safely.
+- [x] Model proposals can request human escalation when the caller asks for more help, while deterministic policy remains authoritative.
+- [x] Voice first-pass issue understanding avoids the repetitive confirmation loop and preserves intake state for the next diagnostic turn.
+- [ ] Validate Qwen GGUF choice, latency, multilingual quality, and live Agora CustomLLM behavior in the sandbox.
+
+**Acceptance:** PRD FR-009, FR-010, FR-011, FR-015; AC-003, AC-005.
+
+**Implementation:** `backend/echosphere/services/llama_cpp.py`, `backend/echosphere/api/routes.py`, `backend/echosphere/services/sessions.py`, and `backend/echosphere/domain/faq.py`.
 
 ## F-001 — Agora Voice Session
 
@@ -28,6 +43,7 @@ Platform/account configuration and documentation readiness are tracked in the im
 - [ ] Normalized events drive session lifecycle and transcript.
 - [ ] Duplicate start/end/callback operations are safe.
 - [ ] Failure produces bounded recovery and human/manual fallback.
+- [x] Voice accepts the first stated intent/issue as understood and advances to troubleshooting without echo-confirming it; sensitive callback details retain confirmation requirements.
 
 **Acceptance:** PRD FR-001, FR-002; AC-002.
 
@@ -122,6 +138,7 @@ Platform/account configuration and documentation readiness are tracked in the im
 - [ ] Queue and session workspace update live.
 - [ ] Agents accept handoffs with context visible first.
 - [ ] Confidence explanation uses bands/reason codes.
+- [x] Customer caller view renders the persisted transcript alongside the optional text composer.
 - [ ] Supervisors can retry permitted integration jobs.
 - [ ] Responsive and keyboard-accessible states meet the UI brief.
 

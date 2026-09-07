@@ -37,6 +37,9 @@ class Settings:
     max_call_seconds: int = 1800
     queue_wait_seconds: int = 120
     retention_hours: int = 24
+    llama_cpp_url: str = ''
+    llama_cpp_model: str = 'qwen1.5-1.8b-chat'
+    llama_cpp_timeout_seconds: float = 8.0
 
     @classmethod
     def from_environment(cls) -> "Settings":
@@ -81,6 +84,9 @@ class Settings:
             max_call_seconds=int(os.getenv('MAX_CALL_SECONDS', '1800')),
             queue_wait_seconds=int(os.getenv('QUEUE_WAIT_SECONDS', '120')),
             retention_hours=int(os.getenv('RETENTION_HOURS', '24')),
+            llama_cpp_url=os.getenv('LLAMA_CPP_URL', '').strip().rstrip('/'),
+            llama_cpp_model=os.getenv('LLAMA_CPP_MODEL', 'qwen1.5-1.8b-chat').strip(),
+            llama_cpp_timeout_seconds=float(os.getenv('LLAMA_CPP_TIMEOUT_SECONDS', '8')),
         )
 
     def __post_init__(self):
@@ -93,7 +99,14 @@ class Settings:
             parsed = urlsplit(self.public_base_url)
             if parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment:
                 raise ConfigurationError('PUBLIC_BASE_URL must be a public HTTPS base URL')
+        if self.llama_cpp_url:
+            from urllib.parse import urlsplit
+            parsed = urlsplit(self.llama_cpp_url)
+            if parsed.scheme not in {'http', 'https'} or parsed.hostname not in {'127.0.0.1', 'localhost', '::1'} or parsed.username or parsed.password or parsed.query or parsed.fragment:
+                raise ConfigurationError('LLAMA_CPP_URL must point to a loopback HTTP endpoint')
         if not 1 <= self.max_sessions <= 100 or not 60 <= self.max_call_seconds <= 7200:
             raise ConfigurationError('Session limits are outside the supported prototype range')
         if not 10 <= self.queue_wait_seconds <= 600 or not 1 <= self.retention_hours <= 168:
             raise ConfigurationError('Queue or retention limit is outside the supported range')
+        if not 1 <= self.llama_cpp_timeout_seconds <= 30:
+            raise ConfigurationError('LLAMA_CPP_TIMEOUT_SECONDS must be between 1 and 30')

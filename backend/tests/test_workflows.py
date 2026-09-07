@@ -74,3 +74,38 @@ def test_operator_can_clear_pending_handoff_queue(client):
     assert response.status_code == 200
     assert response.json['cleared'] == 1
     assert client.get('/api/queue').json['items'] == []
+
+
+class StubLlama:
+    def __init__(self, proposal):
+        self.proposal = proposal
+
+    def answer(self, **_kwargs):
+        return self.proposal
+
+
+def test_local_llm_can_phrase_only_retrieved_faq_answer(app, client):
+    app.extensions['llama_cpp'] = StubLlama({
+        'customer_need': 'internet outage',
+        'answer': 'Please restart the router once and wait thirty seconds.',
+        'satisfied': True,
+        'wants_human': False,
+    })
+    _, _, data = start_voice(client)
+    response = provider_turn(client, app, data, 'My internet is not working')
+    assert response.status_code == 200
+    state = client.get('/api/sessions/' + data['session_id']).json
+    assert 'restart the router' in state['transcript'][-1]['text'].lower()
+    assert 'you said' not in state['transcript'][-1]['text'].lower()
+    assert 'restart the router' in response.get_data(as_text=True).lower()
+
+
+def test_local_llm_request_for_more_help_escalates(app, client):
+    app.extensions['llama_cpp'] = StubLlama({
+        'customer_need': 'internet outage', 'answer': '', 'satisfied': False, 'wants_human': True,
+    })
+    _, _, data = start_voice(client)
+    response = provider_turn(client, app, data, 'The answer did not help me, I want more help')
+    assert response.status_code == 200
+    state = client.get('/api/sessions/' + data['session_id']).json
+    assert state['conversation']['escalation']['trigger'] == 'llm_handoff_request'

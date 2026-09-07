@@ -7,6 +7,11 @@ The supported language contract is `hi-IN`, `en-IN`, and `ta-IN`. Voice-provider
 Operator-console verification covers direct local console access with no login flow; migration 2 removes legacy account storage.
 The console now exposes escalation timing, mute/unmute, end conversation, and an optional human text fallback; voice media remains the primary handoff path.
 
+Local Qwen/llama.cpp integration is implemented behind the controlled provider endpoint. Automated tests cover valid structured output, malformed-output fallback, FAQ-only context, and model-requested escalation. GGUF quality, latency, and live Agora speech evidence remain open.
+Voice regression coverage verifies that the first stated issue advances without a repetitive “You said…” confirmation loop.
+The customer UI now renders the session transcript; the composer remains an input control rather than the only visible conversation surface.
+The Agora startup regression was reproduced as a proxy connection refusal and verified resolved with direct provider transport; live provider acceptance remains separate evidence.
+
 ## Matrix
 
 | Requirement | Feature(s) | Flow(s) | Planned verification |
@@ -27,6 +32,7 @@ The console now exposes escalation timing, mute/unmute, end conversation, and an
 | FR-014 Audit trail | F-010 | All material flows | Integration/state reconstruction |
 | FR-015 Fact/inference distinction | F-005, F-006, F-009 | FLOW-001, FLOW-003 | TS-001, TS-003, UI review |
 | FR-016 Correction/language/refusal/human | F-002, F-004, F-005, F-007 | FLOW-001–003, FLOW-006 | TS-001, TS-003, TS-004 |
+| Local RAG answer interpretation and model-requested handoff | F-011 | FLOW-001, FLOW-003 | `backend/tests/test_llama_cpp.py`, `backend/tests/test_workflows.py` |
 
 ## Acceptance Criteria Coverage
 

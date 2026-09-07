@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import httpx
 from agora_agent import (
     Agent,
     Agora,
@@ -38,6 +39,7 @@ class AgoraGateway:
             area=self._area(settings.agora_agent_area),
             app_id=settings.agora_app_id,
             app_certificate=settings.agora_app_certificate,
+            httpx_client=httpx.Client(trust_env=False),
         )
         self._sessions: dict[str, object] = {}
 

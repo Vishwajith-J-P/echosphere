@@ -37,21 +37,37 @@ Product intent comes from the PRD; technical constraints come from the TRD; arch
 
 ## Run the Current Slice
 
+Use three PowerShell terminals. Copy `.env.example` to `.env` first and fill in the Agora credentials, `SECRET_KEY`, and HTTPS `PUBLIC_BASE_URL`. Never commit `.env`.
+
+Terminal 1 — start Qwen through llama.cpp:
+
 ```powershell
+& "D:\dev_env\llama-b9873-bin-win-vulkan-x64\llama-server.exe" `
+  -m "D:\models\weights\qwen3-1.7b-q4_k_m.gguf" `
+  --host 127.0.0.1 --port 8080 --ctx-size 4096
+```
+
+Terminal 2 — start the Flask backend:
+
+```powershell
+cd D:\projects\echosphere
 conda activate echosphere
+$env:LLAMA_CPP_URL = "http://127.0.0.1:8080"
+$env:LLAMA_CPP_MODEL = "qwen3-1.7b-q4_k_m.gguf"
 cd backend
+python -m pip install -r requirements.txt
 python run.py
 ```
 
-In a second terminal:
+Terminal 3 — start the React/Vite frontend:
 
 ```powershell
-conda activate echosphere
-cd frontend
+cd D:\projects\echosphere\frontend
+npm ci
 npm run dev
 ```
 
-Open the Vite URL, permit microphone access, and choose **Start voice assistance**. Speech enters through the browser microphone and the Agora agent returns speech; there is no caller text intake or text response path. When the caller requests a human, an authenticated supervisor/agent can accept the call from `/console` in the same website and join the existing Agora channel. Copy `.env.example` to `.env`; live voice requires Agora credentials and an HTTPS `PUBLIC_BASE_URL`. Set `SPEECH_PROVIDER=sarvam` with a Sarvam key for the Hindi/Tamil STT/TTS path, or use the Deepgram/MiniMax managed path. Never commit `.env`. The assistant records a follow-up case and asks the next focused question; it does not claim to resolve an issue without an approved knowledge/action system.
+Open `http://localhost:3000`, permit microphone access, and choose **Start voice assistance**. Confirm the backend with `http://127.0.0.1:8000/health/ready` and llama.cpp with `http://127.0.0.1:8080/health`. Start only one Flask process on port `8000`; duplicate backend processes can produce inconsistent Agora startup results. Speech enters through the browser microphone and the Agora agent returns speech. The customer transcript appears in the conversation panel, and text fallback is available during an active session.
 
 ## Safety
 

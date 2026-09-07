@@ -116,6 +116,20 @@ The following must be resolved with official vendor capability validation or dep
 - Production database/job queue.
 - Retention duration, consent text, data residency, and access-control provider.
 
+## D-011 — Local llama.cpp Answer Interpreter (2026-09-07)
+
+**Decision:** Use a separately run local Qwen 1.5/1.8B GGUF model through llama.cpp's loopback OpenAI-compatible server. Give it only approved FAQ retrieval context and use its output as a bounded language/need interpretation proposal.
+
+**Reasoning:** A small local model reduces external inference dependency while preserving the prototype's deterministic conversation and safety controls.
+
+**Tradeoffs:** Model files and llama.cpp are deployment prerequisites, not repository dependencies. Small-model latency and multilingual quality require calibration. The model may not invent knowledge, confirm facts, or override safety and handoff policy; unavailable/malformed output falls back to the deterministic response.
+
+Voice intake accepts the first caller-provided intent and issue description as understood so the assistant can troubleshoot immediately. Confirmation remains required for sensitive callback/contact values and later corrections.
+
 ## Superseded Context
+
+## D-012 — Direct Agora Provider Transport for Local Runtime (2026-09-07)
+
+The Agora gateway uses a dedicated `httpx` client with `trust_env=False` so Agora control-plane requests do not inherit an unavailable machine HTTP proxy. This is limited to the server-side Agora client; browser/API traffic is unchanged. If deployment requires an outbound proxy, it must be configured and verified explicitly rather than inherited implicitly.
 
 The repository previously contained only generic decision templates. D-001 through D-008 establish the product-specific architecture and documentation structure and supersede unstated generic-template assumptions where they conflict.
